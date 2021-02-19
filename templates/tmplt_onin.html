@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+     <meta charset="utf-8">
+     <link rel="stylesheet" href={{ url_for("static", filename="style.css") }}>
+     <title> signon-logon </title>
+  </head>
+ 
+  <body>
+    {% block Header %}
+       <p>   signon-logon    </p>
+    {% endblock Header %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% block formtype %}
+       <form action={{ url_for("signon") }} method="post">
+    {% endblock formtype %}
+        <label for="username">User name:</label>
+        <input placeholder="Username" name="username" type="email"><br>
+        <label for="password">Password:</label>
+        <input placeholder="Password" name="password" type="password"><br>
+    {% block formext %}
+        
+    {% endblock formext %}
+        <input type="submit">
+       </form>
+    
+  </body>
+
+</html>

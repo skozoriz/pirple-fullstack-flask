@@ -1,0 +1,101 @@
+
+-- DDL scripts collected from wsl/postgresql12 through pg4admin
+-- db: pf
+-- user: pf  
+
+
+--------- user:postgres-----------------------
+-- Database: pf
+
+-- DROP DATABASE pf;
+
+CREATE DATABASE pf
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'C.UTF-8'
+    LC_CTYPE = 'C.UTF-8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+	
+--------------------------------------------------
+
+
+-- Table: public.user
+
+-- DROP TABLE public."appuser";
+
+CREATE TABLE public."appuser"
+(
+    uid integer NOT NULL DEFAULT nextval('user_uid_seq'::regclass),
+    uname character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    udtcreated date NOT NULL,
+    upasswd character varying(32) COLLATE pg_catalog."default" NOT NULL,
+    udtout date,
+    CONSTRAINT appuser_pk PRIMARY KEY (uid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."appuser"
+    OWNER to pf;
+-- Index: appuser_uname_idx
+
+-- DROP INDEX public.appuser_uname_idx;
+
+CREATE UNIQUE INDEX appuser_uname_idx
+    ON public."appuser" USING btree
+    (uname COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+	
+
+-- Table: public.tlist
+
+-- DROP TABLE public.tlist;
+
+CREATE TABLE public.tlist
+(
+    tluid integer NOT NULL,
+    tlid integer NOT NULL DEFAULT nextval('tlist_tlid_seq'::regclass),
+    tlname character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    tldtcreated date NOT NULL,
+    tlactive boolean NOT NULL,
+    tlpri int2 NOT NULL DEFAULT 0,
+    tlcolor varchar(8) NOT NULL DEFAULT 'white'::character varying,
+    CONSTRAINT tlist_pk PRIMARY KEY (tlid),
+    CONSTRAINT tlist_fk FOREIGN KEY (tluid)
+        REFERENCES public."appuser" (uid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.tlist
+    OWNER to pf;
+-- Table: public.task
+
+-- DROP TABLE public.task;
+
+CREATE TABLE public.task
+(
+    tid integer NOT NULL DEFAULT nextval('task_tid_seq'::regclass),
+    ttlid integer NOT NULL,
+    tname character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    tdesc character varying(60) COLLATE pg_catalog."default",
+    tdtdue date,
+    tcompleted boolean NOT NULL,
+    tdtcompleted date,
+    tpri int2 NOT NULL DEFAULT 0,
+    CONSTRAINT task_pk PRIMARY KEY (tid),
+    CONSTRAINT task_fk FOREIGN KEY (ttlid)
+        REFERENCES public.tlist (tlid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.task
+    OWNER to pf;
+

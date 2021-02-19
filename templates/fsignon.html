@@ -1,0 +1,15 @@
+{% extends "tmplt_onin.html" %}
+ 
+     {% block Header %}
+       <h1>   Please sign-on:    </h1>
+    {% endblock Header %}
+
+    {% block formtype %}
+       <form action="/signon" method="post">
+    {% endblock formtype %}
+        
+    {% block formext %}
+    <label for="password">Repeat Password:</label>
+    <input placeholder="Repeat Password" name="rpassword" type="password"><br>
+    {% endblock formext %}
+ 

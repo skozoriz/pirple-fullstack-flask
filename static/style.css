@@ -1,0 +1,158 @@
+html, body{
+   background-color: white;
+}
+
+table {
+   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+   font-size: 14px;
+   border-radius: 10px;
+   border-spacing: 0;
+   text-align: center;
+}
+th {
+   background: #BCEBDD;
+   color: white;
+   text-shadow: 0 1px 1px #2D2020;
+   padding: 10px 20px;
+}
+th, td {
+   border-style: solid;
+   border-width: 0 1px 1px 0;
+   border-color: white;
+}
+th:first-child, td:first-child {
+   text-align: right;
+}
+th:first-child {
+   border-top-left-radius: 10px;
+}
+th:last-child {
+   border-top-right-radius: 10px;
+   border-right: none;
+}
+td {
+   padding: 10px 20px;
+   background: #F8E391;
+}
+tbody  td:first-child {
+   border-bottom-left-radius: 10px;
+   border-top-left-radius: 10px;
+}
+tbody  td:last-child {
+   border-bottom-right-radius: 10px;
+   border-top-right-radius: 10px;
+}
+tfoot {
+   background: #BCEBDD;
+   color: white;
+   text-shadow: 0 1px 1px #2D2020;
+   padding: 10px 20px;
+}
+tfoot  td:first-child {
+   border-bottom-left-radius: 10px;
+}
+tfoot  td:last-child {
+   border-bottom-right-radius: 10px;
+   border-right: none;
+}
+tfoot  td {
+   background: #BCEBDD;
+   color: white;
+   text-shadow: 0 1px 1px #2D2020;
+   padding: 10px 20px;
+}
+
+/*  some table colomns classes */
+
+.tname {
+   width: 200px;
+}
+.tdesc {
+   width: 150px;
+}
+.tdate {
+   width: 100px;
+}
+.toperation {
+   width: auto;
+}
+.tpri {
+   text-align: right;
+}
+
+/* standard colors */
+.black {
+   background: black;
+}
+.gray {
+   background: gray;
+}
+.maroon{
+   background: maroon;
+}
+.purple {
+   background: purple;
+}
+.fuchsia {
+   background: fuchsia;
+}
+.green {
+   background: green;
+}
+.lime {
+   background: lime;
+} 
+.yellow {
+   background: yellow;
+}
+.navy{
+   background: navy;
+}
+.blue {
+   background: blue;
+}
+.aqua {
+   background: aqua;
+}
+.silver {
+   background: silver;
+}
+.white {
+   background: white;
+}
+.red {
+   background: red;
+}
+.olive {
+   background: olive;
+}
+.teal {
+   background: teal;
+}
+
+/* for left and right alignment og two strings in one line */
+
+/* 1 */
+
+.text-left-right {
+   text-align: right;
+   position: relative;
+}
+.left-text {
+   left: 0;
+   position: absolute;
+}
+.byline {
+   font-size: 16px;
+   color: rgba(140, 140, 140, 1);
+}
+
+/* or 2 */
+
+.leftstr, .rightstr {
+   float: left; /* Обтекание справа */ 
+   width: 50%; /* Ширина текстового блока */ 
+}
+  .rightstr {
+   text-align: right; /* Выравнивание по правому краю */ 
+}

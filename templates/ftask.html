@@ -1,0 +1,60 @@
+{% extends "tmplt_app.html" %}
+
+{% block head %}
+<h2> {{ form_title }} </h2>
+{% endblock head %}
+
+{% block data %}
+
+<br>
+<form action={{ url_for('task', tlist_id=TLID, task_id=TID) }} method="post">
+
+      <label for="tlid">Task list id:</label>
+      <select name="tlid" id="tlid" {% if request.args.get("mode") != 'alt' %} disabled {% endif %} >
+      {% for tl in TLISTS %}      
+            <option value={{ tl.tlid }} {% if TLID == tl.tlid %} selected {% endif %}> 
+                  {{ tl.tlid }} : {{ tl.tlname }}
+            </option>
+      {% endfor %}
+      </select>     
+
+      <br>
+      <label for="tid">Task id:</label>
+      <input name="tid" id="tid" type="number" value="{{ TID }}" disabled>
+      <br>
+      <label for="tpri">Task name:</label>
+      <input placeholder="Task name" name="tname" id="tpri" type="text" value="{{ TNAME }}">
+      <br>
+      <label for="tname">Task priority:</label>
+      <input placeholder="Task priority" name="tpri" id="tname" type="number" min=-127 max=127 value="{{ TPRI }}">
+      <br>
+      <label for="tdesc">Task description:</label>
+      <input placeholder="Task Description" name="tdesc" id="tdesc" type="text" value="{{ TDESC }}">
+      <br>
+      <label for="tdatedue">Task due date:</label>
+      <input name="tdatedue" id="tdatedue" type="date" value="{{ TDTDUE }}">
+      <br>
+{% if TID %} 
+<!-- update the task with TID -->
+      <label for="tcompleted">Task completed:</label>
+      <input name="tcompleted" id="tcompleted" type="checkbox" {% if TCOMPL %} checked {% endif %}>
+      <br>
+       <label for="tdatecompleted">Task date completed:</label>
+      <input name="tdatecompleted" id="tdatecompleted" type="date" value="{{ TDTCOMPL }}">
+      <br>
+{% else %}
+<!-- create new task, no TID, in TLID -->
+      <label for="tcompleted">Task completed:</label>
+      <input name="tcompleted" id="tcompleted" type="checkbox" value="{{ TCOMPL }}" disabled>
+      <br>
+       <label for="tdatecompleted">Task date completed:</label>
+      <input name="tdatecompleted" id="tdatecompleted" type="date" value="{{ TDTCOMPL }}" disabled>
+      <br>
+{% endif %}
+      <input type="submit"> 
+      <button><a href={{request.referrer}}>Cancel</a></button>
+ 
+ </form>
+<br>
+
+{% endblock data %}

@@ -1,0 +1,44 @@
+{% extends "tmplt_app.html" %}
+
+{% block head %}
+<h2> {{ form_title }} </h2>
+{% endblock head %}
+
+{% block data %}
+<br>
+<form action={{ url_for('tlist', tlist_id=TLID) }} method="post"> 
+
+   <label for="tlname">Task list name:</label>
+   <input placeholder="TList Name" name="tlname" type="text" maxlength="30" size="30" value="{{TLN}}">
+   <br>
+
+   <label for="tlpri">Task list priority:</label>
+   <input placeholder=0 name="tlpri" type="number" max="127" min="-127" value="{{TLPRI}}">
+   <br>
+
+   <label for="tlcolor">Task list color:</label>
+   <select name="tlcolor" id="tlcolor">
+   {% for c in ["black", "silver", "gray", "white", "maroon", "red", "purple", "fuchsia", "green", "lime", "olive", "yellow", "navy", "blue", "teal", "aqua"] : %}
+      <option value={{c}}  {% if c==TLCOLOR %} selected {% endif %} > {{c}}</option>   
+   {% endfor %}
+   </select> 
+   <br> 
+
+   <label for="tlactive">Task list active: </label>
+   {% if TLID %} 
+   <!-- update of tlist with TLID -->
+   <input placeholder=true name="tlactive" type="checkbox" {{TLACTIVE}}>
+   {% else %}
+   <!-- create new tlist, no TLID -->
+   <input placeholder=true name="tlactive" type="checkbox" checked disabled>
+   {% endif %}
+   <br>
+
+   <input type="submit">
+   <button><a href={{request.referrer}}>Cancel</a></button>
+
+</form>
+
+
+<br>
+{% endblock data %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+     <meta charset="utf-8">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link rel="stylesheet" href={{ url_for("static", filename="style.css") }} type="text/css">
+     <title> Task List App </title>
+  </head>
+ 
+  <body>
+     <h1> Task List App</h1>
+     {% if g.user %}
+     <b> {{ g.user.uname }}:{{g.user.uid}}  </b>
+     {% endif %}
+     <br>
+     <br>
+     <br>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+     {% block head %}   {% endblock head %}
+
+     {% block data %}   {% endblock data %}
+
+     {% block footer %} {% endblock footer %}
+
+     <p>
+     <span><a href={{ url_for('about') }}> About </a> | <a href={{ url_for('privacy') }}> Privacy </a> | <a href={{ url_for('termsofuse') }}> Terms of use </a></span>
+     {% if session.get('user_name', None)  %}
+      <span> ~ ~ ~ ~ ~ ~ </span>
+      <span><a href={{ url_for('logout') }}>Log-out {{session.user_name}}</a> | <a href={{ url_for('signoff') }}>Sign-off {{session.user_name}}</a></span>
+     {% endif %}
+     </p>
+  </body>
+
+</html>
+
+
+

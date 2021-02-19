@@ -1,0 +1,72 @@
+{% extends "tmplt_app.html" %}
+
+{% block head %}
+
+{% endblock head %}
+
+{% set active_values = [true] if request.args.get("activeonly") == 'Yes' else [true, false] %}
+
+{% block data %}
+<table class="table">
+<caption>
+  <h2 class="text-left-right">
+    <span class="left-text"> Task lists</span>
+    <span class="byline"><a href={{ url_for('tasksall') }}> <strong>AltView</strong></a></span>
+  </h2>
+</caption>
+<thead>
+<tr>
+    <th>Tasks_link</th>
+    <th>Count</th>
+    <th>Priority</th>
+    <th>List_name</th>
+    <th>Active</th>
+    <th>Date_created</th>
+    <th>Color</th>
+    <th>Operation</th>
+</tr>
+</thead>
+<tbody>
+{% for tl in list_of_tlists if tl.tlactive in active_values : %}
+  <tr>
+    <td><a href={{ url_for('tasks', tlist_id=tl.tlid) }}><Strong>to tl:{{ tl.tlid }} tasks</Strong></a> </td> 
+    <td>{{ tl.tltcount }}</td>
+    <td class="tpri">{{ tl.tlpri }}</td>
+    <td class="tname">{{ tl.tlname }}</td> 
+    <td>
+      {% if tl.tlactive %}
+        <i class="fa fa-check-square-o"></i>
+      {% else %}
+        <i class="fa fa-square-o"></i>
+      {% endif %}      
+    </td> 
+    <td class="tdate">{{ tl.tldtcreated }}</td> 
+    <td  class="{{ tl.tlcolor }}">{{ tl.tlcolor }}</td> 
+    <td class="toperation"> <a href={{ url_for('tlist', tlist_id=tl.tlid) }}><Strong>UPD</Strong></a>||
+          <a href={{ url_for('tlist_delete', tlist_id=tl.tlid) }}><Strong>DEL</Strong></a> 
+    </td>
+  </tr>
+{% endfor %}
+</tbody>
+<tfoot>
+<tr>
+    <td>  </td> 
+    <td>  </td>
+    <td>  </td>
+    <td> <a href={{ url_for('tlist') }}><strong>NEW</strong></td> 
+    <td> 
+      {% if request.args.get("activeonly") == 'Yes' %}
+        <a href={{ url_for('tlists') }}><strong>F:all</strong></a> 
+      {% else %}
+        <a href={{ url_for('tlists', activeonly='Yes') }}><strong>F:act</strong></a> 
+      {% endif %}
+    </td>
+    <td>  </td> 
+    <td>  </td> 
+    <td>  </td> 
+  </tr>
+</tfoot>
+</table>
+
+<br>
+{% endblock data %}
