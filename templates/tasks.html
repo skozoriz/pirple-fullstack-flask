@@ -9,10 +9,10 @@
 {% block data %}
 <div>
 
-<table class="table">
-  <caption>
+<table class="table table-responsive">
+  <caption style="caption-side: top;">
     <h2 class="text-left-right">
-      <span class="left-text">Tasks from list {{ TLID }} "{{ TLNAME }}"</span>
+      <span class="left-text">Tasks from list {{ TLID }} "{{ TLNAME | truncate(20, True) }}"</span>
       <span class="byline"><a href={{ url_for('tasksall') }}> <strong>AltView  </strong></a></span>
     </h2> 
   </caption>
@@ -38,9 +38,9 @@
     <td class="tdate">{{ t.tdtdue }}</td>
     <td>
       {% if t.tcompleted %}
-        <i class="fa fa-check-square-o"></i>
+        <i class="bi bi-check-square"></i>
       {% else %}
-        <i class="fa fa-square-o"></i>
+        <i class="bi bi-square"></i>
       {% endif %}
     </td>
     <td class="tdate">{{ t.tdtcompleted }}</td>

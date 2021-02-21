@@ -8,8 +8,8 @@
 {% set tlactive_values = [true] if request.args.get("tlactiveonly") == 'Yes' else [true, false] %}
 
 {% block data %}
-<table class="table">
-  <caption>
+<table class="table table-responsive">
+  <caption style="caption-side: top;">
     <h2 class="text-left-right">
       <span class="left-text"> All Tasks for {{ g.user.uname }} </span>
       <span class="byline"><a href={{ url_for('tlists') }}> <strong>MainView</strong></a></span>
@@ -41,9 +41,9 @@
     <td class="tdate">{{ t.tdtdue }}</td>
     <td>
      {% if t.tcompleted %}
-      <i class="fa fa-check-square-o"></i>
+      <i class="bi bi-check-square"></i>
      {% else %}
-      <i class="fa fa-square-o"></i>
+      <i class="bi bi-square"></i>
      {% endif %}
     </td>
     <td  class="tdate">{{ t.tdtcompleted }}</td>
@@ -52,9 +52,9 @@
     <td class="{{ t.ttlcolor }} tname">{{ t.ttlname }}</td>
     <td class="{{ t.ttlcolor }}">
      {% if t.ttlactive %}
-      <i class="fa fa-check-square-o"></i> 
+      <i class="bi bi-check-square"></i> 
      {% else %}
-      <i class="fa fa-square-o"></i>
+      <i class="bi bi-square"></i>
      {% endif %}     
     </td>
     <td  class="toperation"><a href={{ url_for('task', tlist_id=t.ttlid, task_id=t.tid, mode='alt') }}><Strong>UPD</Strong></a>||

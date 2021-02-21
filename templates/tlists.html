@@ -7,8 +7,8 @@
 {% set active_values = [true] if request.args.get("activeonly") == 'Yes' else [true, false] %}
 
 {% block data %}
-<table class="table">
-<caption>
+<table class="table table-responsive">
+<caption style="caption-side: top;">
   <h2 class="text-left-right">
     <span class="left-text"> Task lists</span>
     <span class="byline"><a href={{ url_for('tasksall') }}> <strong>AltView</strong></a></span>
@@ -35,15 +35,15 @@
     <td class="tname">{{ tl.tlname }}</td> 
     <td>
       {% if tl.tlactive %}
-        <i class="fa fa-check-square-o"></i>
+        <i class="bi bi-check-square"></i>
       {% else %}
-        <i class="fa fa-square-o"></i>
+        <i class="bi bi-square"></i>
       {% endif %}      
     </td> 
     <td class="tdate">{{ tl.tldtcreated }}</td> 
     <td  class="{{ tl.tlcolor }}">{{ tl.tlcolor }}</td> 
     <td class="toperation"> <a href={{ url_for('tlist', tlist_id=tl.tlid) }}><Strong>UPD</Strong></a>||
-          <a href={{ url_for('tlist_delete', tlist_id=tl.tlid) }}><Strong>DEL</Strong></a> 
+      <a href={{ url_for('tlist_delete', tlist_id=tl.tlid) }}><Strong>DEL</Strong></a> 
     </td>
   </tr>
 {% endfor %}
