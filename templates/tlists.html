@@ -11,16 +11,22 @@
 <caption style="caption-side: top;">
   <h2 class="text-left-right">
     <span class="left-text"> Task lists</span>
-    <span class="byline"><a href={{ url_for('tasksall') }}> <strong>AltView</strong></a></span>
+    <span class="byline toperation">
+      <a href={{ url_for('tlist') }}><strong>NEW</strong>   ||
+      <a href={{ url_for('tasksall') }}> <strong>AltView</strong></a></span>
   </h2>
 </caption>
 <thead>
 <tr>
-    <th>Tasks_link</th>
     <th>Count</th>
     <th>Priority</th>
     <th>List_name</th>
-    <th>Active</th>
+    <th>{% if request.args.get("activeonly") == 'Yes' %}
+      <a href={{ url_for('tlists') }} class="toperation"><strong>F:all</strong></a> 
+      {% else %}
+      <a href={{ url_for('tlists', activeonly='Yes') }} class="toperation"><strong>F:act</strong></a> 
+      {% endif %}
+      <br>Active</th>
     <th>Date_created</th>
     <th>Color</th>
     <th>Operation</th>
@@ -29,11 +35,10 @@
 <tbody>
 {% for tl in list_of_tlists if tl.tlactive in active_values : %}
   <tr>
-    <td><a href={{ url_for('tasks', tlist_id=tl.tlid) }}><Strong>to tl:{{ tl.tlid }} tasks</Strong></a> </td> 
-    <td>{{ tl.tltcount }}</td>
+    <td  class="tpri">{{ tl.tltcount }}</td>
     <td class="tpri">{{ tl.tlpri }}</td>
-    <td class="tname">{{ tl.tlname }}</td> 
-    <td>
+    <td class="toperation tname"><a href={{ url_for('tasks', tlist_id=tl.tlid) }}><Strong>{{ tl.tlname }}</Strong></a></td> 
+    <td class="tchbox">
       {% if tl.tlactive %}
         <i class="bi bi-check-square"></i>
       {% else %}
@@ -42,7 +47,7 @@
     </td> 
     <td class="tdate">{{ tl.tldtcreated }}</td> 
     <td  class="{{ tl.tlcolor }}">{{ tl.tlcolor }}</td> 
-    <td class="toperation"> <a href={{ url_for('tlist', tlist_id=tl.tlid) }}><Strong>UPD</Strong></a>||
+    <td class="toperation"> <a href={{ url_for('tlist', tlist_id=tl.tlid) }}><Strong>UPD</Strong></a> ||
       <a href={{ url_for('tlist_delete', tlist_id=tl.tlid) }}><Strong>DEL</Strong></a> 
     </td>
   </tr>
@@ -50,17 +55,10 @@
 </tbody>
 <tfoot>
 <tr>
+    <td>  </td>
+    <td>  </td>
     <td>  </td> 
     <td>  </td>
-    <td>  </td>
-    <td> <a href={{ url_for('tlist') }}><strong>NEW</strong></td> 
-    <td> 
-      {% if request.args.get("activeonly") == 'Yes' %}
-        <a href={{ url_for('tlists') }}><strong>F:all</strong></a> 
-      {% else %}
-        <a href={{ url_for('tlists', activeonly='Yes') }}><strong>F:act</strong></a> 
-      {% endif %}
-    </td>
     <td>  </td> 
     <td>  </td> 
     <td>  </td> 

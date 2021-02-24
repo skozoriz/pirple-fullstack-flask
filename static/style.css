@@ -1,7 +1,7 @@
 html, body{
    background-color: white;
 }
-
+/*
 table {
    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
    font-size: 14px;
@@ -61,22 +61,43 @@ tfoot  td {
    text-shadow: 0 1px 1px #2D2020;
    padding: 10px 20px;
 }
+*/
 
 /*  some table colomns classes */
 
 .tname {
    width: 200px;
+   text-shadow: 2px 2px 5px blue;
+}
+.tlnameshort {
+   width: 130px;
 }
 .tdesc {
-   width: 150px;
+   width: 220px;
+   font-size: small;
+   /*
+  overflow: hidden;
+  */
+}
+.tnamedesc {
+   width: 300px;
+   text-shadow: 2px 2px 5px blue;
 }
 .tdate {
-   width: 100px;
+   width: 110px;
+   text-align: left;
 }
 .toperation {
    width: auto;
+   text-align: center;
+   text-shadow: 2px 2px 5px gray;
 }
 .tpri {
+   text-align: right;
+   /* vertical-align: middle; */
+   font-size: small;
+}
+.tchbox {
    text-align: right;
 }
 

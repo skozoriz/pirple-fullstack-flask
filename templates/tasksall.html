@@ -12,52 +12,81 @@
   <caption style="caption-side: top;">
     <h2 class="text-left-right">
       <span class="left-text"> All Tasks for {{ g.user.uname }} </span>
-      <span class="byline"><a href={{ url_for('tlists') }}> <strong>MainView</strong></a></span>
+      <span class="byline">
+        <a href={{ url_for('task', tlist_id=0, task_id=None, mode='alt') }} class="toperation"><strong>NEW</strong></a> || 
+        <a href={{ url_for('tlists') }}><strong>MainView</strong></a></span>
     </h2>
   </caption>
   <thead>
     <tr>
-        <!-- <th>id</th> -->
-        <th>Pri</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Date_due</th>
-        <th>Completed</th>
-        <th>_Date</th>
-        <!-- <th width=20  align="right"><Strong>Tlid</Strong></th> -->
-        <th class="tpri">Tl_pri</th>
-        <th>Tl_name</th>
-        <th>Tl_active</th>
+        <th class="tpri">Pri</th>
+        <th>
+          <span class="tname">Name</span>
+          <br><span class="tdesc">Description</span> 
+        </th>
+        <th class="tdate">Date_due</th>
+        <th class="tchbox">
+          {% if request.args.get("tnotcomletedonly") == 'Yes' %}
+          <a href={{ url_for('tasksall', tnotcomletedonly='No', allsort=request.args.get('allsort', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}  class="toperation"> <strong>F:all</strong> </a> 
+          {% else %}
+          <a href={{ url_for('tasksall', tnotcomletedonly='Yes', allsort=request.args.get('allsort', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}  class="toperation"> <strong>F:~compl</strong> </a> 
+          {% endif %}
+          <br>Completed
+        </th>
+        <th class="tdate">_Date</th>
+
+        <th class="tpri">
+          Tl _pri
+        </th>
+        <th>
+          {% if request.args.get("altsort") == 'Yes' %}
+          <a href={{ url_for('tasksall', altsort='No', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}  class="toperation"> <strong>ORD:main</strong> </a> 
+          {% else %}
+          <a href={{ url_for('tasksall', altsort='Yes', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}  class="toperation"> <strong>ORD:alt</strong> </a> 
+          {% endif %}
+          <br>_name
+        </th>
+        <th class="tchbox">
+          {% if request.args.get("tlactiveonly") == 'Yes' %}
+          <a href={{ url_for('tasksall', tlactiveonly='No', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), allsort=request.args.get('allsort', 'No')) }}  class="toperation"> <strong>F:all</strong></a> 
+          {% else %}
+          <a href={{ url_for('tasksall', tlactiveonly='Yes', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), allsort=request.args.get('allsort', 'No')) }}  class="toperation"> <strong>F:active</strong></a> 
+          {% endif %}
+          <br>_active
+        </th>
+
         <th>Operation</th>
     </tr>
   </thead>  
   <tbody>
 {% for t in list_of_tasks if t.tcompleted in tcompleted_values and t.ttlactive in tlactive_values %}
   <tr>
-    <!-- <td align="right">{{ t.tid }}</td> -->
-    <td>{{ t.tpri }}</td>
-    <td class="tname">{{ t.tname }}</td> 
-    <td class="tdesc">{{ t.tdesc }}</td>
-    <td class="tdate">{{ t.tdtdue }}</td>
+    <td class="tpri">{{ t.tpri }}</td>
     <td>
+      <span class="tname">{{ t.tname }}</span> 
+      <br> <span class="tdesc">{{ t.tdesc | truncate(60, True) }}</span> 
+    </td>
+    <td class="tdate">{{ t.tdtdue  if t.tdtdue else ""}}</td>
+    <td class="tchbox">
      {% if t.tcompleted %}
       <i class="bi bi-check-square"></i>
      {% else %}
       <i class="bi bi-square"></i>
      {% endif %}
     </td>
-    <td  class="tdate">{{ t.tdtcompleted }}</td>
-    <!-- <td align="right"  bgcolor={{ t.ttlcolor }}>{{ t.ttlid }}</td> -->
-    <td align="right" class="{{ t.ttlcolor }}">{{ t.ttlpri }}</td>  
-    <td class="{{ t.ttlcolor }} tname">{{ t.ttlname }}</td>
-    <td class="{{ t.ttlcolor }}">
-     {% if t.ttlactive %}
-      <i class="bi bi-check-square"></i> 
-     {% else %}
-      <i class="bi bi-square"></i>
-     {% endif %}     
+    <td  class="tdate">{{ t.tdtcompleted if t.tdtcompleted else ""}}</td>
+
+    <td class="{{ t.ttlcolor }} tpri">{{ t.ttlpri }}</td>  
+    <td class="{{ t.ttlcolor }} tlnameshort">{{ t.ttlname  | truncate(15, True)  }}</td>
+    <td class="{{ t.ttlcolor }} tchbox">
+       {% if t.ttlactive %}
+        <i class="bi bi-check-square"></i> 
+       {% else %}
+        <i class="bi bi-square"></i>
+       {% endif %}     
     </td>
-    <td  class="toperation"><a href={{ url_for('task', tlist_id=t.ttlid, task_id=t.tid, mode='alt') }}><Strong>UPD</Strong></a>||
+
+    <td  class="toperation"><a href={{ url_for('task', tlist_id=t.ttlid, task_id=t.tid, mode='alt') }}><Strong>UPD</Strong></a> ||
         <a href={{ url_for('task_delete', tlist_id=t.ttlid, task_id=t.tid) }}><Strong>DEL</Strong></a>
     </td>
   </tr>
@@ -65,36 +94,15 @@
 </tbody>
 <tfoot>
 <tr>
-    <!-- <td>
-       <a href={{ url_for('tlists') }}> <strong>UP</strong></a>
-    </td>  -->
     <td>  </td>
-    <td> <a href={{ url_for('task', tlist_id=0, task_id=None, mode='alt') }}> <strong>NEW</strong></a> </td>
+    <td>  </td>
+    <td>  </td>
     <td>  </td>   
     <td>  </td>  
-    <td> 
-      {% if request.args.get("tnotcomletedonly") == 'Yes' %}
-        <a href={{ url_for('tasksall', tnotcomletedonly='No', allsort=request.args.get('allsort', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}> <strong>F:all</strong> </a> 
-      {% else %}
-        <a href={{ url_for('tasksall', tnotcomletedonly='Yes', allsort=request.args.get('allsort', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}> <strong>F:~compl</strong> </a> 
-      {% endif %}
-    </td>     
     <td>  </td>
     <td>  </td>
-    <td> 
-      {% if request.args.get("altsort") == 'Yes' %}
-        <a href={{ url_for('tasksall', altsort='No', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}> <strong>ORD:main</strong> </a> 
-      {% else %}
-        <a href={{ url_for('tasksall', altsort='Yes', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}> <strong>ORD:alt</strong> </a> 
-      {% endif %}
-    </td>      
-    <td> 
-      {% if request.args.get("tlactiveonly") == 'Yes' %}
-        <a href={{ url_for('tasksall', tlactiveonly='No', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), allsort=request.args.get('allsort', 'No')) }}> <strong>F:all</strong></a> 
-      {% else %}
-        <a href={{ url_for('tasksall', tlactiveonly='Yes', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), allsort=request.args.get('allsort', 'No')) }}> <strong>F:active</strong></a> 
-      {% endif %}
-    </td>     
+    <td>  </td>      
+    <td>  </td>     
     <td>  </td>
   </tr>
 </tfoot>
