@@ -20,40 +20,31 @@
   <thead>
     <tr>
         <th class="tpri">Pri</th>
-        <th>
-          <span class="tname">Name</span>
-          <br><span class="tdesc">Description</span> 
-        </th>
+        <th><span class="tname">Task name</span></th>
         <th class="tdate">Date_due</th>
-        <th class="tchbox">
+
+        <th>
           {% if request.args.get("tnotcomletedonly") == 'Yes' %}
           <a href={{ url_for('tasksall', tnotcomletedonly='No', allsort=request.args.get('allsort', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}  class="toperation"> <strong>F:all</strong> </a> 
           {% else %}
           <a href={{ url_for('tasksall', tnotcomletedonly='Yes', allsort=request.args.get('allsort', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}  class="toperation"> <strong>F:~compl</strong> </a> 
           {% endif %}
-          <br>Completed
+          <br>Completed|Date
         </th>
-        <th class="tdate">_Date</th>
-
-        <th class="tpri">
-          Tl _pri
-        </th>
+ 
         <th>
           {% if request.args.get("altsort") == 'Yes' %}
           <a href={{ url_for('tasksall', altsort='No', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}  class="toperation"> <strong>ORD:main</strong> </a> 
           {% else %}
           <a href={{ url_for('tasksall', altsort='Yes', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), tlactiveonly=request.args.get('tlactiveonly', 'No')) }}  class="toperation"> <strong>ORD:alt</strong> </a> 
           {% endif %}
-          <br>_name
-        </th>
-        <th class="tchbox">
+          ||
           {% if request.args.get("tlactiveonly") == 'Yes' %}
           <a href={{ url_for('tasksall', tlactiveonly='No', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), allsort=request.args.get('allsort', 'No')) }}  class="toperation"> <strong>F:all</strong></a> 
           {% else %}
           <a href={{ url_for('tasksall', tlactiveonly='Yes', tnotcomletedonly=request.args.get('tnotcomletedonly', 'No'), allsort=request.args.get('allsort', 'No')) }}  class="toperation"> <strong>F:active</strong></a> 
           {% endif %}
-          <br>_active
-        </th>
+          <br>Task list
 
         <th>Operation</th>
     </tr>
@@ -61,29 +52,32 @@
   <tbody>
 {% for t in list_of_tasks if t.tcompleted in tcompleted_values and t.ttlactive in tlactive_values %}
   <tr>
-    <td class="tpri">{{ t.tpri }}</td>
+    <td class="tpri"><br>{{ t.tpri }}</td>
     <td>
       <span class="tname">{{ t.tname }}</span> 
-      <br> <span class="tdesc">{{ t.tdesc | truncate(60, True) }}</span> 
+      <br> <span class="tdesc">{{ t.tdesc | truncate(30, True) }}</span> 
     </td>
     <td class="tdate">{{ t.tdtdue  if t.tdtdue else ""}}</td>
-    <td class="tchbox">
+
+    <td>
      {% if t.tcompleted %}
       <i class="bi bi-check-square"></i>
      {% else %}
       <i class="bi bi-square"></i>
      {% endif %}
+     {{ t.tdtcompleted if t.tdtcompleted else ""}}     
     </td>
-    <td  class="tdate">{{ t.tdtcompleted if t.tdtcompleted else ""}}</td>
 
-    <td class="{{ t.ttlcolor }} tpri">{{ t.ttlpri }}</td>  
-    <td class="{{ t.ttlcolor }} tlnameshort">{{ t.ttlname  | truncate(15, True)  }}</td>
-    <td class="{{ t.ttlcolor }} tchbox">
-       {% if t.ttlactive %}
-        <i class="bi bi-check-square"></i> 
-       {% else %}
-        <i class="bi bi-square"></i>
-       {% endif %}     
+    <td class="{{ t.ttlcolor }}">
+      <span class="badge badge-light">
+        {{ t.ttlpri }} |
+        {{ t.ttlname  | truncate(15, True)  }} |
+        {% if t.ttlactive %}
+          <i class="bi bi-check-square"></i> 
+        {% else %}
+          <i class="bi bi-square"></i>
+        {% endif %}   
+      </span>
     </td>
 
     <td  class="toperation"><a href={{ url_for('task', tlist_id=t.ttlid, task_id=t.tid, mode='alt') }}><Strong>UPD</Strong></a> ||
@@ -95,9 +89,6 @@
 <tfoot>
 <tr>
     <td>  </td>
-    <td>  </td>
-    <td>  </td>
-    <td>  </td>   
     <td>  </td>  
     <td>  </td>
     <td>  </td>

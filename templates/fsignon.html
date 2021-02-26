@@ -2,6 +2,7 @@
  
      {% block Header %}
        <h1>   Please sign-on:    </h1>
+       <br>
     {% endblock Header %}
 
     {% block formtype %}
@@ -9,7 +10,11 @@
     {% endblock formtype %}
         
     {% block formext %}
-    <label for="password">Repeat Password:</label>
-    <input placeholder="Repeat Password" name="rpassword" type="password"><br>
+    <div class="form-group form-row">
+      <label for="rpassword" class="col-sm-2 col-form-label">Repeat Password</label>
+      <div class="col-sm-4">
+         <input type="password" class="form-control" id="rpassword" placeholder="Repeat Password" name="rpassword" ><br>
+      </div>
+    </div>
     {% endblock formext %}
  

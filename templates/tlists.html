@@ -18,8 +18,7 @@
 </caption>
 <thead>
 <tr>
-    <th>Count</th>
-    <th>Priority</th>
+    <th>Pri</th>
     <th>List_name</th>
     <th>{% if request.args.get("activeonly") == 'Yes' %}
       <a href={{ url_for('tlists') }} class="toperation"><strong>F:all</strong></a> 
@@ -35,9 +34,8 @@
 <tbody>
 {% for tl in list_of_tlists if tl.tlactive in active_values : %}
   <tr>
-    <td  class="tpri">{{ tl.tltcount }}</td>
     <td class="tpri">{{ tl.tlpri }}</td>
-    <td class="toperation tname"><a href={{ url_for('tasks', tlist_id=tl.tlid) }}><Strong>{{ tl.tlname }}</Strong></a></td> 
+    <td class="tnamelink"><a href={{ url_for('tasks', tlist_id=tl.tlid) }}><Strong>{{ tl.tlname }}</Strong><span class="badge badge-secondary">{{ tl.tltcount }}</span></a></td> 
     <td class="tchbox">
       {% if tl.tlactive %}
         <i class="bi bi-check-square"></i>
@@ -55,7 +53,6 @@
 </tbody>
 <tfoot>
 <tr>
-    <td>  </td>
     <td>  </td>
     <td>  </td> 
     <td>  </td>

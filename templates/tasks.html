@@ -9,10 +9,11 @@
 {% block data %}
 <div>
 
-<table class="table table-responsive">
+<table class="table table-responsive table-hover table-sm">
   <caption style="caption-side: top;">
     <h2 class="text-left-right">
-      <span class="left-text">Tlist {{ TLID }} "{{ TLNAME | truncate(24, True) }}"</span>
+      <span class="left-text">Tlist "{{ TLNAME | truncate(24, True) }}"</span>
+      <span class="badge badge-secondary">{{ TLCOUNT }}</span>
       <span class="byline">
         <a href={{ url_for('tlists') }} class="toperation"><strong>UP</strong></a> ||
         <a href={{ url_for('task', tlist_id=TLID, task_id=None, mode='main') }} class="toperation"><strong>NEW</strong></a> ||
@@ -23,9 +24,7 @@
   <thead>
     <tr>
        <th class="tpri">Pri</th>
-       <th><span class="tname">Name</span>
-         <br><span class="tdesc">Description</span> 
-       </th>
+       <th><span class="tname">Task name</span></th>
        <th class="tdate">Date_due</th>
        <th class="tchbox">
         {% if request.args.get("notcomletedonly") == 'Yes' %}
@@ -41,7 +40,7 @@
   <tbody>
 {% for t in list_of_tasks if t.tcompleted in completed_values : %}
   <tr>
-    <td class="tpri">{{ t.tpri }}</td>
+    <td class="tpri"><br>{{ t.tpri }}</td>
     <td>
       <span class="tname">{{ t.tname }}</span> 
       <br> <span class="tdesc">{{ t.tdesc | truncate(60, True) }}</span> 
@@ -62,7 +61,7 @@
 </tbody>
 <tfoot>
 <tr>
-    <td> </td> 
+    <td>  </td> 
     <td>  </td>
     <td>  </td>   
     <td>  </td>

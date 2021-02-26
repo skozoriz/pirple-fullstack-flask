@@ -65,12 +65,16 @@ tfoot  td {
 
 /*  some table colomns classes */
 
-.tname {
-   width: 200px;
-   text-shadow: 2px 2px 5px blue;
-}
 .tlnameshort {
    width: 130px;
+}
+.tnamelink {
+   width: auto;
+   text-shadow: 2px 2px 5px blue;
+}
+.tname {
+   width: 200px;
+   font-weight: bold;
 }
 .tdesc {
    width: 220px;

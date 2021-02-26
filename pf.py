@@ -308,10 +308,13 @@ def tasks(tlist_id=None):
 
 	tasks_Task = md.read_tasks(tlist_id)			# list of tuples
 
+	tl = md.read_tlist(tlist_id)
+
 	return render_template(
 		'tasks.html', 
 		TLID = tlist_id,
-		TLNAME = md.read_tlist(tlist_id).tlname,
+		TLNAME = tl.tlname,
+		TLCOUNT = tl.tltcount,
 		list_of_tasks = tasks_Task
 	)	
 

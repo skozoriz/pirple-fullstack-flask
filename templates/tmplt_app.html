@@ -10,6 +10,7 @@
   </head>
  
   <body>
+  <div class="container">
      <h1> Task List App</h1>
      {% if g.user %}
      <b> {{ g.user.uname }}:{{g.user.uid}}  </b>
@@ -34,13 +35,26 @@
 
      {% block footer %} {% endblock footer %}
 
-     <p>
-     <span><a href={{ url_for('about') }}> About </a> | <a href={{ url_for('privacy') }}> Privacy </a> | <a href={{ url_for('termsofuse') }}> Terms of use </a></span>
-     {% if session.get('user_name', None)  %}
-      <span> ~ ~ ~ ~ ~ ~ </span>
-      <span><a href={{ url_for('logout') }}>Log-out {{session.user_name}}</a> | <a href={{ url_for('signoff') }}>Sign-off {{session.user_name}}</a></span>
-     {% endif %}
-     </p>
+     <div class="row">
+       <div class="col-sm4">
+          <span>
+            <a href={{ url_for('about') }}> About </a> 
+            | <a href={{ url_for('privacy') }}> Privacy </a> 
+            | <a href={{ url_for('termsofuse') }}> Terms of use </a>
+          </span>
+        </div>
+        <div class="col"> 
+        </div>
+        <div class="col-sm4">
+          {% if session.get('user_name', None)  %}
+            <span>
+              <a href={{ url_for('logout') }}>Log-out {{session.user_name}}</a> 
+              | <a href={{ url_for('signoff') }}>Sign-off {{session.user_name}}</a>
+            </span>
+          {% endif %}
+        </div>
+    </div>
+  </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
