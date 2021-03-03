@@ -1,0 +1,2 @@
+SECRET_KEY = "1234509876!@#$%+_)(*"
+DEBUG = True

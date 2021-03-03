@@ -14,10 +14,20 @@ from flask import (
 	abort,
 )
 
-import model as md
+from pf import app
 
-app = Flask(__name__)
-app.secret_key = "1234509876!@#$%+_)(*"
+from . import model as md
+
+# from pf.adminapp.adminapp import adminapp
+
+# app = Flask(__name__)
+
+# app.secret_key = "1234509876!@#$%+_)(*"  
+
+# app.register_blueprint(adminapp, url_prefix='/admin')
+
+# md.conn_db()
+
 
 
 # @app.before_first_request
@@ -482,16 +492,16 @@ def task_delete(tlist_id=None, task_id=None):
 	return redirect(request.referrer)
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-	md.conn_db()
+# 	md.conn_db()
 
-	print(f'[before_app.run] ...') 
+# 	print(f'[before_app.run] ...') 
 
-	app.run(host='localhost', port=5001, debug=True)  # host='0.0.0.0' or host='localhost'  
+# 	app.run(host='localhost', port=5001, debug=True)  # host='0.0.0.0' or host='localhost'  
 
-	print(f'[after_app.run] ...') 
+# 	print(f'[after_app.run] ...') 
 
-	md.close_db()
+# 	md.close_db()
 
-	print(f'[after_close_db] ...') 
+# 	print(f'[after_close_db] ...') 
