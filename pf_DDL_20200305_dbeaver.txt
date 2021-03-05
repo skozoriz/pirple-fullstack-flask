@@ -1,0 +1,108 @@
+-- DROP SCHEMA public;
+
+CREATE SCHEMA public AUTHORIZATION postgres;
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+--
+-- type and sequence definitions deleted
+--
+
+-- public.appuser definition
+
+-- Drop table
+
+-- DROP TABLE appuser;
+
+CREATE TABLE appuser (
+	uid serial NOT NULL,
+	uname varchar(30) NOT NULL,
+	udtcreated date NOT NULL,
+	upasswd varchar(32) NOT NULL,
+	udtout date NULL,
+	CONSTRAINT user_pk PRIMARY KEY (uid)
+);
+CREATE UNIQUE INDEX user_uname_idx ON public.appuser USING btree (uname);
+
+-- Permissions
+
+ALTER TABLE public.appuser OWNER TO pf;
+GRANT ALL ON TABLE public.appuser TO pf;
+GRANT ALL ON TABLE public.appuser TO postgres;
+
+
+-- public.admuser definition
+
+-- Drop table
+
+-- DROP TABLE admuser;
+
+CREATE TABLE admuser (
+	auid serial NOT NULL,
+	auname varchar(30) NOT NULL,
+	audtcreated date NOT NULL,
+	aupasswd varchar(32) NOT NULL,
+	CONSTRAINT admuser_pk PRIMARY KEY (auid)
+);
+
+-- Permissions
+
+ALTER TABLE public.admuser OWNER TO pf;
+GRANT ALL ON TABLE public.admuser TO pf;
+
+
+-- public.tlist definition
+
+-- Drop table
+
+-- DROP TABLE tlist;
+
+CREATE TABLE tlist (
+	tluid int4 NOT NULL,
+	tlid serial NOT NULL,
+	tlname varchar(30) NOT NULL,
+	tldtcreated date NOT NULL,
+	tlactive bool NOT NULL,
+	tlpri int2 NOT NULL DEFAULT 0,
+	tlcolor varchar(8) NOT NULL DEFAULT 'white'::character varying,
+	CONSTRAINT tlist_pk PRIMARY KEY (tlid),
+	CONSTRAINT tlist_fk FOREIGN KEY (tluid) REFERENCES appuser(uid)
+);
+
+-- Permissions
+
+ALTER TABLE public.tlist OWNER TO pf;
+GRANT ALL ON TABLE public.tlist TO pf;
+
+
+-- public.task definition
+
+-- Drop table
+
+-- DROP TABLE task;
+
+CREATE TABLE task (
+	tid serial NOT NULL,
+	ttlid int4 NOT NULL,
+	tname varchar(30) NOT NULL,
+	tdesc varchar(60) NULL,
+	tdtdue date NULL,
+	tcompleted bool NOT NULL DEFAULT false,
+	tdtcompleted date NULL,
+	tpri int2 NOT NULL DEFAULT 0,
+	CONSTRAINT task_pk PRIMARY KEY (tid),
+	CONSTRAINT task_fk FOREIGN KEY (ttlid) REFERENCES tlist(tlid)
+);
+
+-- Permissions
+
+ALTER TABLE public.task OWNER TO pf;
+GRANT ALL ON TABLE public.task TO pf;
+
+
+
+
+-- Permissions
+
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;

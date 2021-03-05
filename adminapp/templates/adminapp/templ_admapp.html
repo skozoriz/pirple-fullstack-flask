@@ -19,8 +19,9 @@
         <nav class="light-blue lighten-1" role="navigation">
             <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">PFadmin</a>
               <ul class="right hide-on-med-and-down">
-                <li><a href="#">Navbar Link 1</a></li>
-                <li><a href="#">Navbar Link 2</a></li>
+                <li><a href={{ url_for('adminapp.adm_home') }}>Dash-bord</a></li>
+                <li><a href={{ url_for('adminapp.adm_usermgmt') }}>User_Management</a></li>
+                <li><a href={{ url_for('adminapp.adm_logout') }}>Log-out</a></li>
               </ul>
         
               <ul id="nav-mobile" class="sidenav">

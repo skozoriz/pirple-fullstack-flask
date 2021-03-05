@@ -48,6 +48,24 @@ User = namedtuple(
 )
 USER_EMPTY = User()
 
+# special case - read adminuser
+
+def read_adminuser(auname=None): 
+    if auname is None: 
+        return USER_EMPTY
+    with _CONN:
+        with _CONN.cursor() as cur:
+            cur.execute("""
+                SELECT auid, auname, audtcreated, Null as audtout, aupasswd 
+                FROM admuser
+                WHERE auname=%s; """,
+                (auname,)
+            )
+            if (res := (cur.fetchone())):
+                auinfo = User(*res)
+            else:
+                auinfo = USER_EMPTY
+    return auinfo 
 
 def read_users():
     cur = _CONN.cursor()
