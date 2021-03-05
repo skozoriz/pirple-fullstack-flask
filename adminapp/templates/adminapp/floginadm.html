@@ -1,13 +1,30 @@
-{% extends "tmplt_onin.html" %}
- 
-     {% block Header %}
-       <h1>PF Admin Login Only</h1>
-    {% endblock Header %}
-
-    {% block formtype %}
-       <form action="/admlogin" method="post">
-    {% endblock formtype %}
-        
-    {% block formext %}
+{% extends "adminapp/templ_admapp.html" %}
+  
+{% block content1 %}
+       <h2>PF Admin Login Only</h2>
+{% endblock content1 %}   
        
-    {% endblock formext %}
+{% block content2 %}
+<form method="post">
+   <div class="row">
+      <div class="input-field col s12">
+         <label for="admusern">AdminUser name</label>
+         <input type="text" class="validate" id="admusern" placeholder="Adminuser" name="admusern">
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12"></div>
+         <label for="password">Password</label>
+         <input type="password" class="validate" id="password" placeholder="Password" name="password">
+         <span class="helper-text" data-error="wrong" data-success="right">Helper text</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12 center">
+         <button type="submit" class="btn waves-effect waves-light">Login</button>
+      </div>
+    </div>
+</form>
+{% endblock content2 %}  
+        
+   
