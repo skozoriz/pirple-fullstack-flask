@@ -1,17 +1,18 @@
 # data model for my pf pirple project
 from collections import namedtuple
 import sys 
-import psycopg2 as pg
+# import psycopg2 as pg
 
-_CONNECT_STRING = "host=localhost dbname=pf user=pf password=pf"
-_CONN = None
+# _CONNECT_STRING = "host=localhost dbname=pf user=pf password=pf"
+# _CONN = None
 
+from pf.db import CONN as _CONN
 
-
-def conn_db(cs=_CONNECT_STRING):
+def conn_db(cs=""):
+# def conn_db(cs=_CONNECT_STRING):
     # Connect to postgres DB
-    global _CONN
-    _CONN = pg.connect(cs)  # GLOBALLY AVAILABLE   
+    # global _CONN
+    # _CONN = pg.connect(cs)  # GLOBALLY AVAILABLE   
     # _CONN.autocommit = 'True' 
     # Open a cursor to perform database operations
     cur = _CONN.cursor()

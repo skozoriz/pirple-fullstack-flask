@@ -9,7 +9,8 @@ from flask import (
     g,
 )
 
-from pf import model as md 
+# from pf import model as md 
+from . import adminapp_model as mda
 
 adminapp = Blueprint('adminapp', __name__, 
     # static_url_path='admin',
@@ -27,7 +28,21 @@ def adm_home():
     if not g.admuname:
         flash('You are not administrator, please login as pf admin.')
         return redirect(url_for('adminapp.adm_login'))
-    return render_template('adminapp/admin_dashb.html')
+
+    # read ncount users registered total
+    ncount = mda.count_user(case='all')
+    # read n24count users registed for last 24 hours
+    n24count = mda.count_user(case='24h')
+    # read tlcount task lists total
+    tlcount = mda.count_tlist(case='all')
+    # read tl24count task lists created for last 24 hours   
+    tl24count = mda.count_tlist(case='24h')
+    return render_template('adminapp/admin_dashb.html',
+        ncount=ncount,
+        n24count=n24count,
+        tlcount=tlcount,
+        tl24count=tl24count
+    )
 
 @adminapp.route('/users')
 def adm_usermgmt():
@@ -48,7 +63,7 @@ def adm_login():
         # hash_upswd = hashlib.md5(upswd.encode()).hexdigest()	
 
         # check  uname, password in DB
-        au = md.read_adminuser(fauname)
+        au = mda.read_adminuser(fauname)
         print(f'  :::[adm_login] au={au}')
         # usern = "admin"  # md.read_adminuser(auname)
         # pswd = "admin"
