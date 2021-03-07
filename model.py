@@ -1,10 +1,6 @@
 # data model for my pf pirple project
 from collections import namedtuple
 import sys 
-# import psycopg2 as pg
-
-# _CONNECT_STRING = "host=localhost dbname=pf user=pf password=pf"
-# _CONN = None
 
 from pf.db import CONN as _CONN
 
@@ -43,28 +39,9 @@ User = namedtuple(
 )
 USER_EMPTY = User()
 
-# special case - read adminuser
-
-def read_adminuser(auname=None): 
-    if auname is None: 
-        return USER_EMPTY
-    with _CONN:
-        with _CONN.cursor() as cur:
-            cur.execute("""
-                SELECT auid, auname, audtcreated, Null as audtout, aupasswd 
-                FROM admuser
-                WHERE auname=%s; """,
-                (auname,)
-            )
-            if (res := (cur.fetchone())):
-                auinfo = User(*res)
-            else:
-                auinfo = USER_EMPTY
-    return auinfo 
-
 def read_users():
     cur = _CONN.cursor()
-    cur.execute("SELECT uid, uname, udtcreated, udtout, upasswd FROM appuser;")
+    cur.execute("SELECT uid, uname, udtcreated::date, udtout, upasswd FROM appuser;")
     if (ds := cur.fetchall()) :
         users = tuple( map(User._make, ds) )
     else:
@@ -74,13 +51,12 @@ def read_users():
     return users
 
 def create_user(uname=None, pw=None):
-
     with _CONN:
         with _CONN.cursor() as cur:
             try:
                 cur.execute("""
                     INSERT INTO appuser (uname, udtcreated, upasswd)
-                    VALUES (%s, CURRENT_DATE, %s); """,
+                    VALUES (%s, CURRENT_TIMESTAMP, %s); """,
                     (uname[:30], pw[:32])     
                 )
             except:
@@ -93,7 +69,7 @@ def read_user(uname=None):
     with _CONN:
         with _CONN.cursor() as cur:
             cur.execute("""
-                SELECT uid, uname, udtcreated, udtout, upasswd 
+                SELECT uid, uname, udtcreated::date, udtout, upasswd 
                 FROM appuser
                 WHERE uname=%s; """,
                 (uname,)
@@ -114,7 +90,7 @@ def update_user(uname=None, udtout=None, pw=None):  # not realized in this versi
                     UPDATE appuser
                     SET udtout=%s, upasswd=%s 
                     WHERE uname=%s
-                    RETURNING  uid, uname, udtcreated, udtout, upasswd; """,
+                    RETURNING  uid, uname, udtcreated::date, udtout, upasswd; """,
                     (udtout, pw[:32], uname)
                 )
                 if (res := cur.fetchone()):
@@ -193,7 +169,7 @@ def read_tlists(uname=None):
         with _CONN.cursor() as cur:
             cur.execute("""
                 SELECT 
-                    u.uname, tluid, tlid, tlname, tldtcreated, tlactive, tlpri, tlcolor,
+                    u.uname, tluid, tlid, tlname, tldtcreated::date, tlactive, tlpri, tlcolor,
                     (SELECT count(*) FROM task where task.ttlid=tlid) as tltcount  
                 FROM tlist tls, appuser u
                 WHERE tls.tluid=u.uid
@@ -222,8 +198,8 @@ def create_tlist(uname=None, tlname=None, tlpri=0, tlcolor='white'):
             try:
                 cur.execute("""
                     INSERT INTO tlist (tluid, tlname, tldtcreated, tlactive, tlpri, tlcolor)
-                    VALUES (%s, %s, CURRENT_DATE, TRUE, %s, %s)
-                    RETURNING tluid, tlid, tlname, tldtcreated, tlactive, tlpri, tlcolor, 0; """,
+                    VALUES (%s, %s, CURRENT_TIMESTAMP, TRUE, %s, %s)
+                    RETURNING tluid, tlid, tlname, tldtcreated::date, tlactive, tlpri, tlcolor, 0; """,
                     (uid, tlname[:30], tlpri, tlcolor)
                 )
                 tl = cur.fetchone()
@@ -241,7 +217,7 @@ def read_tlist(tlid=None):
         with _CONN.cursor() as cur:
             cur.execute("""
                 SELECT 
-                    tluid, tlid, tlname, tldtcreated, tlactive, tlpri, tlcolor,
+                    tluid, tlid, tlname, tldtcreated::date, tlactive, tlpri, tlcolor,
                     (SELECT count(*) FROM task where task.ttlid=tlid) as tltcount  
                 FROM tlist
                 WHERE tlid=%s""",
@@ -267,7 +243,7 @@ def update_tlist(tlid=None, tlname=None, tlactive=None, tlpri=None, tlcolor=None
                     UPDATE tlist
                     SET tlname=%s, tlactive=%s, tlpri=%s, tlcolor=%s
                     WHERE tlid=%s
-                    RETURNING  tluid, tlid, tlname, tldtcreated, tlactive, tlpri, tlcolor,
+                    RETURNING  tluid, tlid, tlname, tldtcreated::date, tlactive, tlpri, tlcolor,
                             (SELECT COUNT(*) FROM task WHERE ttlid=tlid) AS tcnt; """,
                     (tlname[:30], tlactive, tlpri, tlcolor, tlid)
                 )
@@ -467,7 +443,7 @@ if __name__ == '__main__':
     print('model test started...')
     print(f'model.py started as {__name__}')
     
-    conn_db()
+    check_db()
 
     # # list all users
     # lr = read_users()

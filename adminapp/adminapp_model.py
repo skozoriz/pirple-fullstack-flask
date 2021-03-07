@@ -25,7 +25,7 @@ def count_user(case='all'):
     if case not in ('all', '24h'): 
         return None
     sql = "SELECT count(*) FROM appuser "
-    sql2 = "WHERE udtcreated=CURRENT_DATE" if case == '24h' else ""
+    sql2 = "WHERE udtcreated>(CURRENT_TIMESTAMP - interval '24h')" if case == '24h' else ""
     with _CONN:
         with _CONN.cursor() as cur:
             cur.execute(sql+sql2+";",())
@@ -37,7 +37,7 @@ def count_tlist(case='all'):
     if case not in ('all', '24h'): 
         return None
     sql = "SELECT count(*) FROM tlist "
-    sql2 = "WHERE tldtcreated=CURRENT_DATE" if case == '24h' else ""
+    sql2 = "WHERE tldtcreated>(CURRENT_TIMESTAMP - interval '24h')" if case == '24h' else ""
     with _CONN:
         with _CONN.cursor() as cur:
             cur.execute(sql+sql2+";",())            

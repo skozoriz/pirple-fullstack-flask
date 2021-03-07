@@ -17,7 +17,7 @@ COMMENT ON SCHEMA public IS 'standard public schema';
 CREATE TABLE appuser (
 	uid serial NOT NULL,
 	uname varchar(30) NOT NULL,
-	udtcreated date NOT NULL,
+	udtcreated timestamp(0) NOT NULL,
 	upasswd varchar(32) NOT NULL,
 	udtout date NULL,
 	CONSTRAINT user_pk PRIMARY KEY (uid)
@@ -40,7 +40,7 @@ GRANT ALL ON TABLE public.appuser TO postgres;
 CREATE TABLE admuser (
 	auid serial NOT NULL,
 	auname varchar(30) NOT NULL,
-	audtcreated date NOT NULL,
+	audtcreated timestamp(0) NOT NULL,
 	aupasswd varchar(32) NOT NULL,
 	CONSTRAINT admuser_pk PRIMARY KEY (auid)
 );
@@ -61,7 +61,7 @@ CREATE TABLE tlist (
 	tluid int4 NOT NULL,
 	tlid serial NOT NULL,
 	tlname varchar(30) NOT NULL,
-	tldtcreated date NOT NULL,
+	tldtcreated timestamp(0) NOT NULL,
 	tlactive bool NOT NULL,
 	tlpri int2 NOT NULL DEFAULT 0,
 	tlcolor varchar(8) NOT NULL DEFAULT 'white'::character varying,
