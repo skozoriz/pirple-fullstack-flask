@@ -8,13 +8,7 @@ import sys
 
 from pf.db import CONN as _CONN
 
-def conn_db(cs=""):
-# def conn_db(cs=_CONNECT_STRING):
-    # Connect to postgres DB
-    # global _CONN
-    # _CONN = pg.connect(cs)  # GLOBALLY AVAILABLE   
-    # _CONN.autocommit = 'True' 
-    # Open a cursor to perform database operations
+def check_db():
     cur = _CONN.cursor()
     _print_dbcount(cur, "appuser")
     _print_dbcount(cur, "tlist")

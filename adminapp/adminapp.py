@@ -65,8 +65,6 @@ def adm_login():
         # check  uname, password in DB
         au = mda.read_adminuser(fauname)
         print(f'  :::[adm_login] au={au}')
-        # usern = "admin"  # md.read_adminuser(auname)
-        # pswd = "admin"
 
         if au.uname == fauname and au.upasswd == faupswd :
             session['adm_user_name'] = au.uname

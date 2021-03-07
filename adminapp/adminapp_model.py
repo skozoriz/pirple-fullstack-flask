@@ -1,9 +1,8 @@
 from pf.db import CONN as _CONN 
-    # User, 
-from pf.model import User, USER_EMPTY    # USER_EMPTY,
+ 
+from pf.model import User, USER_EMPTY    
 
 # special case - read adminuser
-
 def read_adminuser(auname=None): 
     if auname is None: 
         return USER_EMPTY

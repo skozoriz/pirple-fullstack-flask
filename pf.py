@@ -18,18 +18,6 @@ from pf import app
 
 from . import model as md
 
-# from pf.adminapp.adminapp import adminapp
-
-# app = Flask(__name__)
-
-# app.secret_key = "1234509876!@#$%+_)(*"  
-
-# app.register_blueprint(adminapp, url_prefix='/admin')
-
-# md.conn_db()
-
-
-
 # @app.before_first_request
 # def before_first_request():
 #   init db connection here?
