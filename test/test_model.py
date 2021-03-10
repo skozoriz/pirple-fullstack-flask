@@ -1,7 +1,9 @@
 import sys 
 print(sys.path)
 
-import model as md   # The code to test
+from pf.db import CONN as _CONN 
+from pf import model as md   # The code to test
+
 import datetime as dt
 import hashlib
 
@@ -33,12 +35,12 @@ def setup_db():
     global _test_uid, _new_tlid1, _new_tlid2, _new_tid1_1, _new_tid1_2    
     print('\n', f'<<< test_user:{test_user} test_uid:{_test_uid} new_user:{new_user}')
     
-    print(f'conn:{md._CONN}')
-    md.conn_db()  # used but not tested
-    print(f'conn: {md._CONN}')
+    print(f'conn:{_CONN}')
+    # md.conn_db()  # used but not tested
+    # print(f'conn: {md._CONN}')
     # add test user
-    with md._CONN:
-        with md._CONN.cursor() as cur:
+    with _CONN:
+        with _CONN.cursor() as cur:
             try:
                 print(f'cur: {cur}')
                 sql = f"""INSERT INTO appuser (uname, udtcreated, udtout, upasswd)
@@ -97,8 +99,8 @@ def setup_db():
 
     print('\n[test_model] setup module after yield')
 
-    with md._CONN:
-        with md._CONN.cursor() as cur:
+    with _CONN:
+        with _CONN.cursor() as cur:
             print('teardown...')
             try:
 
@@ -330,7 +332,8 @@ def test_update_task():
     t_dtcompleted = t.tdtcompleted
     t_pri = t.tpri - 100
     tu = md.update_task(
-        tid=t_tid, 
+        tid=t_tid,
+        tlid=t_tlid, 
         name=t_name,
         desc=t_desc,
         dtdue=t_dtdue,

@@ -231,8 +231,10 @@ def read_tlist(tlid=None):
 
     return tlinfo 
 
-def update_tlist(tlid=None, tlname=None, tlactive=None, tlpri=None, tlcolor=None):
-    
+def update_tlist(tlid=None, tlname=None, tlactive=None, tlpri=None, tlcolor='white'):
+
+    print(f'-=-=[upd_tlist] tlid:{tlid}, tlname:{tlname}, tlactive:{tlactive}, tlpri:{tlpri}, tlcolor:{tlcolor}')
+
     if tlid is None: 
         return TLIST_EMPTY
 
@@ -343,9 +345,12 @@ def read_tasksall(uid=None):
 
 #
 def create_task(tlid=None, name=None, desc=None, dtdue=None, completed=False, dtcompleted=None, pri=0):
+
+    # print(f'-=-=[create_task] tlid:{tlid}, name:{name}, desc:{desc}, dtdue:{dtdue}, completed:{completed}, dtcompleted:{dtcompleted}, pri:{pri}')
+    
     if tlid is None:
         return TASK_EMPTY
-    # print(f'-=-=[create_task] tlid:{tlid}, name:{name}, desc:{desc}, dtdue:{dtdue}, completed:{completed}, dtcompleted:{dtcompleted}, pri:{pri}')
+
     with _CONN:
         with _CONN.cursor() as cur:
             try:
@@ -387,7 +392,7 @@ def read_task(tid=None):
 #
 def update_task(tid=None, tlid=None, name=None, desc=None, dtdue=None, completed=False, dtcompleted=None, pri=None):
 
-    print(f'-=-=[update_task] tid:{tid}, tlid:{tlid}, name:{name}, desc:{desc}, dtdue={dtdue}, completed:{completed}, dtcompleted:{dtcompleted}, pri:{pri}')
+    # print(f'-=-=[update_task] tid:{tid}, tlid:{tlid}, name:{name}, desc:{desc}, dtdue={dtdue}, completed:{completed}, dtcompleted:{dtcompleted}, pri:{pri}')
 
     if tid is None: 
         return TASK_EMPTY
