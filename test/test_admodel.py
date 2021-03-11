@@ -35,7 +35,7 @@ def prepare_test_data(nuser=2, nint=1):
     # !!! nint > 0
     lint = nuser // nint
     print("<<=====SQL======")
-    for i in range(nuser):
+    for i in range(1, nuser+1):
         # (uid) uname, udtcreated::timestamp, upasswd, udtout::date
         # test-user<n>, now()..now()-days(nuser-1), 'passwd', NULL
         sql1 = f"""INSERT INTO appuser (uname, udtcreated, upasswd)
@@ -44,8 +44,8 @@ def prepare_test_data(nuser=2, nint=1):
         print(sql1)
         uid, udtcreated = exec_sql_manyres(sql1)[0]
         print(f'returning: uid={uid}, udtctreated={udtcreated}')
-        if i==0 or nuser % lint == 0 :
-            for j in range(4):
+        if i==1 or i % lint == 0 :
+            for j in range(1, 5):
                 # tluid, (tlid) tlname, tldtcreated::timestamp, tlactive, tlpri, tlcolor
                 #               tl-test-<uid,j>, udtcreated, True, j*5, 'white' 
                 sql2 = f"""INSERT INTO tlist (tluid, tlname, tldtcreated, tlactive, tlpri, tlcolor)
@@ -54,7 +54,7 @@ def prepare_test_data(nuser=2, nint=1):
                 print(sql2)
                 tlid = exec_sql_oneres(sql2)
                 print(f'returning: tlid={tlid}')
-                for k in range(4):
+                for k in range(1, 3):
                     # (tid) ttlid, tname, tdesc, tdtdue::date, tcompleted, tdtcompleted::date, tpri
                     #       tlid, task-test-<uid,tlid,k>, desc-<uid,tlid,k>, NULL, False, NULL, -5*k
                     sql3 = f"""INSERT INTO task (ttlid, tname, tdesc, tdtdue, tcompleted, tdtcompleted, tpri)
@@ -137,16 +137,47 @@ def test_count_tl_24h():
     sql = "SELECT * from tlist;"
     tlists = exec_sql_manyres(sql)
     c_db = len([tl for tl in tlists if tl[3]>dt.datetime.now()-dt.timedelta(hours=24)])
-    c_mda = mda.count_user("24h")
+    c_mda = mda.count_tlist("24h")
     assert c_db == c_mda
 
-def test_readuserspg_first():
+def test_readuserspg_first_ol():
+    users_pg1 = mda.read_users_ol(offset=0, limit=12)
+    assert (
+        len(users_pg1) == 12
+        and users_pg1[0].udtcreated.strftime('%Y-%m-%d') == dt.date.today().strftime('%Y-%m-%d') #  compare dates, without time
+        and users_pg1[0].upasswd == 'passwd100'
+        and users_pg1[11].upasswd == 'passwd89'
+    )
+
+def test_readuserspg_first_page():
+    users_pg1 = mda.read_users_page('1', pagelen=12)
+    assert (
+       len(users_pg1) == 12
+        and users_pg1[0].udtcreated.strftime('%Y-%m-%d') == dt.date.today().strftime('%Y-%m-%d') #  compare dates, without time
+        and users_pg1[0].upasswd == 'passwd100'
+        and users_pg1[11].upasswd == 'passwd89'
+    )
+
+def test_read_userspg_last_ol():
+    pagelen = 12
+    usersn = mda.count_user(case='all')
+    pagesn = (usersn // pagelen) + 1 if (usersn % pagelen) > 0 else 0
+    users_pglast = mda.read_users_ol(offset=pagelen*(pagesn-1), limit=pagelen)
+    assert len(users_pglast) == (pagelen if (usersn % pagelen) == 0 else usersn % pagelen)
+        # and users_pg1[0].udtcreated.strftime('%Y-%m-%d') == dt.date.today().strftime('%Y-%m-%d') #  compare dates, without time
+        # and users_pg1[0].upasswd == 'passwd100'
+        # and users_pg1[11].upasswd == 'passwd89'
+
+def test_read_userspg_last_page():
+    pagelen = 12
+    usersn = mda.count_user(case='all')
+    users_pglast = mda.read_users_page(pagenum='last', pagelen=pagelen)
+    assert len(users_pglast) == (pagelen if (usersn % pagelen) == 0 else usersn % pagelen)
+
+def test_read_userspg_middle_ol():
     pass
 
-def test_read_userspg_last():
-    pass
-
-def test_read_userspg_middle():
+def test_read_userspg_middle_pg():
     pass
 
 
