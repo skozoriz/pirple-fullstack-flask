@@ -175,9 +175,22 @@ def test_read_userspg_last_page():
     assert len(users_pglast) == (pagelen if (usersn % pagelen) == 0 else usersn % pagelen)
 
 def test_read_userspg_middle_ol():
-    pass
+    users_pg2 = mda.read_users_ol(offset=12, limit=12)
+    assert (
+       len(users_pg2) == 12
+        and users_pg2[0].udtcreated.strftime('%Y-%m-%d') == (dt.date.today()-dt.timedelta(days=12)).strftime('%Y-%m-%d') #  compare dates, without time
+        and users_pg2[0].upasswd == 'passwd88'
+        and users_pg2[11].upasswd == 'passwd77'
+    )
+
 
 def test_read_userspg_middle_pg():
-    pass
+    users_pg2 = mda.read_users_page('2', pagelen=12)
+    assert (
+       len(users_pg2) == 12
+        and users_pg2[0].udtcreated.strftime('%Y-%m-%d') == (dt.date.today()-dt.timedelta(days=12)).strftime('%Y-%m-%d') #  compare dates, without time
+        and users_pg2[0].upasswd == 'passwd88'
+        and users_pg2[11].upasswd == 'passwd77'
+    )
 
 
