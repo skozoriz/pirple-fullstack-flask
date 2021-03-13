@@ -23,34 +23,6 @@ def before_request():
 	if 'adm_user_name' in session:
 		g.admuname = session["adm_user_name"]
 
-@adminapp.route('/')
-def adm_home():
-    if not g.admuname:
-        flash('You are not administrator, please login as pf admin.')
-        return redirect(url_for('adminapp.adm_login'))
-
-    # read ncount users registered total
-    ncount = mda.count_user(case='all')
-    # read n24count users registed for last 24 hours
-    n24count = mda.count_user(case='24h')
-    # read tlcount task lists total
-    tlcount = mda.count_tlist(case='all')
-    # read tl24count task lists created for last 24 hours   
-    tl24count = mda.count_tlist(case='24h')
-    return render_template('adminapp/admin_dashb.html',
-        ncount=ncount,
-        n24count=n24count,
-        tlcount=tlcount,
-        tl24count=tl24count
-    )
-
-@adminapp.route('/users')
-def adm_usermgmt():
-    if not g.admuname:
-        flash('You are not administrator, please login as pf admin.')
-        return redirect(url_for('adminapp.adm_login'))
-    return render_template('adminapp/admin_users.html')
-
 @adminapp.route('/login', methods=['GET','POST'])
 def adm_login():
 
@@ -82,3 +54,46 @@ def adm_login():
 def adm_logout():
 	session.pop('adm_user_name', None)
 	return redirect(url_for('adminapp.adm_home'))
+
+
+@adminapp.route('/')
+def adm_home():
+    if not g.admuname:
+        flash('You are not administrator, please login as pf admin.')
+        return redirect(url_for('adminapp.adm_login'))
+
+    # read ncount users registered total
+    ncount = mda.count_user(case='all')
+    # read n24count users registed for last 24 hours
+    n24count = mda.count_user(case='24h')
+    # read tlcount task lists total
+    tlcount = mda.count_tlist(case='all')
+    # read tl24count task lists created for last 24 hours   
+    tl24count = mda.count_tlist(case='24h')
+    return render_template('adminapp/admin_dashb.html',
+        ncount=ncount,
+        n24count=n24count,
+        tlcount=tlcount,
+        tl24count=tl24count
+    )
+
+@adminapp.route('/users')
+# URL parameters processed by template
+#   pg_style in (+"1col", "Ncol"), 
+#   pg_lines in (10, =12, 20, 24)
+#   pg_num_ - page num to be shown (default is '1' or 'first')
+# variables for template
+#   nn - number of users in appuser table
+#   mdaproc - procedure from admin model which read users for one page (template decides)
+def adm_usermgmt():
+    
+    if not g.admuname:
+        flash('You are not administrator, please login as pf admin.')
+        return redirect(url_for('adminapp.adm_login'))
+    
+    return render_template(
+        'adminapp/admin_users.html', 
+        nn=mda.count_user("all"),
+        mdaproc=mda.read_users_page
+    )
+

@@ -96,7 +96,7 @@ def setup_db():
     print('---test_admodel/setup_db/init---')
     prepare_test_data(nuser=100, nint=5)
     yield
-    delete_test_data()
+    # delete_test_data()
     print('---test_admodel/setup_db/close---')
 
 def test_read_adminuser_emp():
