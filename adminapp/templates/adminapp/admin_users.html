@@ -8,6 +8,8 @@
 {% set strpagelines = request.args.get("pg_lines", "12")  %}
 {% set pagelines = (strpagelines if strpagelines in ['10', '12', '20', '24'] else '12') | int  %} 
 
+{% set uid_del = request.args.get("uid_del", "0") | int %}
+
 {% set pages = nn//(pagelines * styleN) + (0 if (nn % pagelines) == 0 else 1) %}
 
 {% set strpagenum = request.args.get("pg_num", "1") %}
@@ -25,6 +27,7 @@
       strpagestyle={{strpagestyle}} :: from url-args: {{ request.args.get("pg_style") }} <br>
       pagenum={{pagenum}} :: from url-args: {{ request.args.get("pg_num") }} <br>
       pagelines={{pagelines}} :: from url-args: {{ request.args.get("pg_lines") }} <br>
+      uid_del=={{uid_del}} :: from url-args: {{ request.args.get("uid_del") }} <br>
       stylen={{styleN}} <br>
       pages={{pages}} <br>
       "range": {{ ['first', 'last'] + range(1,pages+1)|map('string')|list }}
@@ -63,51 +66,131 @@
   </div> 
  
 {% if strpagestyle == '1col' %}
-  <ul class="collection">
-   {% for u in ulist %}
-    <a href="#!" class="collection-item">{{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}</a>
-  {% endfor %}
-  </ul>
-{% elif strpagestyle == 'Ncol' %}
-  <div class="row">
-    <div class="col m3">
-      <ul class="collection">
-      {% for u in ulist[:pagelines] %}
-      <a href="#!" class="collection-item">{{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}</a>
-      {% endfor %}
-      <li>
-    </div>
-    <div class="col m3">
-      <ul class="collection">
-        {% for u in ulist[pagelines:2*pagelines] %}
-        <a href="#!" class="collection-item">{{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}</a>
-        {% endfor %}
-        <li>  
-    </div>
-    <div class="col m3">
-      <ul class="collection">
-        {% for u in ulist[2*pagelines:3*pagelines] %}
-        <a href="#!" class="collection-item">{{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}</a>
-        {% endfor %}
-      <li>
-    </div>
-    <div class="col m3">
-      <ul class="collection">
-        {% for u in ulist[3*pagelines:] %}
-        <a href="#!" class="collection-item">{{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}</a>
-        {% endfor %}
-      <li>
-    </div>
-    <!-- 
-    <div class="col s4">5</div> 
-    -->
+
+  <div class="collection">
+    {% for u in ulist %}
+      {% if u.uid==uid_del %}
+
+        <div>
+          <h6> Delete user </h6>
+          <div class="switch">
+            <label>
+              Delete Off
+              <input type="checkbox">
+              <span class="lever"></span>
+              Delete On
+            </label>
+          </div>
+        </div>
+
+        <div class="input-field inline">
+            <input disabled value="{{ u.uid }}" id="uid" type="text">
+            <label for="uid">Id</label>
+        </div>
+        <div class="input-field inline">
+            <input disabled value="{{ u.uname }}" id="uname" type="text">
+            <label for="uame">Name</label>
+        </div>
+        <div class="input-field inline">
+            <input disabled value="{{ u.udtcreated }}" id="dtcreated" type="text">
+            <label for="dtcreated">Date Created</label>
+        </div>
+        <div class="input-field inline">
+          <input disabled value="{{ 4 }}" id="ntasks" type="text">
+          <label for="ntasks">Tasks</label>
+        </div>
+
+        <div>
+        <a class="waves-effect waves-light btn ">Delete</a>
+        <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle)}} 
+          class="waves-effect waves-light btn ">Cancel
+        </a>
+        <hr>
+        </div>
+
+      {% else %}
+        <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle, uid_del=u.uid)}} 
+        class="collection-item">
+          {{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}
+        </a>
+      {% endif %}
+    {% endfor %}
   </div>
+
+{% elif strpagestyle == 'Ncol' %}
+
+<div class="row"> 
+
+  {% for i in range(1, 5) %}
+
+    <div class="col m3">
+      <div class="collection">
+
+        {% for u in ulist[(i-1)*pagelines:i*pagelines] %}
+
+        {% if u.uid==uid_del %}
+        
+        <div>
+          <h6> Delete user </h6>
+          <div class="switch">
+            <label>
+              Delete Off
+              <input type="checkbox">
+              <span class="lever"></span>
+              Delete On
+            </label>
+          </div>
+        </div>
+
+        <div class="input-field inline">
+            <input disabled value="{{ u.uid }}" id="uid" type="text">
+            <label for="uid">Id</label>
+        </div>
+        <div class="input-field inline">
+            <input disabled value="{{ u.uname }}" id="uname" type="text">
+            <label for="uame">Name</label>
+        </div>
+        <div class="input-field inline">
+            <input disabled value="{{ u.udtcreated }}" id="dtcreated" type="text">
+            <label for="dtcreated">Date Created</label>
+        </div>
+        <div class="input-field inline">
+          <input disabled value="{{ 4 }}" id="ntasks" type="text">
+          <label for="ntasks">Tasks</label>
+        </div>
+
+        <div>
+        <a class="waves-effect waves-light btn ">Delete</a>
+        <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle)}} 
+          class="waves-effect waves-light btn ">Cancel
+        </a>
+        <hr>
+        </div>
+
+        {% else %}
+
+          <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle, uid_del=u.uid)}}
+            class="collection-item">
+            {{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}
+          </a>
+        
+        {% endif %}
+
+        {% endfor %}
+
+      </div>
+    </div>
+
+    {% endfor%}  
+</div>
+
 {% else %}
   <br>
   <p>Unknown page display stile</p>
   <br>  
+
 {% endif %} 
  
 </div>
-<br><br>
+<br>
 {% endblock content2 %}
