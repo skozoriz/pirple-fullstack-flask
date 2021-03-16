@@ -82,6 +82,7 @@ def adm_home():
 #   pg_style in (+"1col", "Ncol"), 
 #   pg_lines in (10, =12, 20, 24)
 #   pg_num_ - page num to be shown (default is '1' or 'first')
+#   uid_del - user to be shown for deletion
 # variables for template
 #   nn - number of users in appuser table
 #   mdaproc - procedure from admin model which read users for one page (template decides)

@@ -36,7 +36,7 @@
 {% endblock content1 %}   
 
 {% block content2 %}
-<div class="section">
+<div class="">
   <div class="row">
     <div class="col m6">
       <ul class="pagination">
@@ -48,7 +48,8 @@
       </ul>
     </div>
     <div class="col m6">  
-      <a class="dropdown-trigger waves-effect waves-light btn blue right" data-target='dropdown_pglines'>LinesPerPage:{{pagelines}}</a>
+      <div class="right">
+      <a class="dropdown-trigger waves-effect waves-light btn blue" data-target='dropdown_pglines'>LinesPerPage:{{pagelines}}</a>
       <!-- Dropdown Structure -->
       <ul id='dropdown_pglines' class='dropdown-content'>
         <li><a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=10, pg_style=strpagestyle)}}>LinesPerPage:10</a></li>
@@ -56,12 +57,13 @@
         <li><a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=20, pg_style=strpagestyle)}}>LinesPerPage:20</a></li>
         <li><a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=24, pg_style=strpagestyle)}}>LinesPerPage:24</a></li>
       </ul> 
-      <a class="dropdown-trigger waves-effect waves-light btn blue right"  data-target='dropdown_pgstyles'>PageStyle:{{strpagestyle}}</a>
+      <a class="dropdown-trigger waves-effect waves-light btn blue"  data-target='dropdown_pgstyles'>PageStyle:{{strpagestyle}}</a>
       <!-- Dropdown Structure -->
       <ul id='dropdown_pgstyles' class='dropdown-content'>
         <li><a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style='1col')}}>PageStyle:1col</a></li>
         <li><a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style='Ncol')}}>PageStyle:Ncol</a></li>
       </ul> 
+      </div>
     </div>
   </div> 
  
@@ -96,8 +98,12 @@
             <label for="dtcreated">Date Created</label>
         </div>
         <div class="input-field inline">
-          <input disabled value="{{ 4 }}" id="ntasks" type="text">
-          <label for="ntasks">Tasks</label>
+          <input disabled value="{{ u.utlcount }}" id="ntls" type="text">
+          <label for="ntls">Tlist count</label>
+        </div>
+        <div class="input-field inline">
+          <input disabled value="{{ u.utcount }}" id="ntasks" type="text">
+          <label for="ntasks">Task count</label>
         </div>
 
         <div>
@@ -111,7 +117,7 @@
       {% else %}
         <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle, uid_del=u.uid)}} 
         class="collection-item">
-          {{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}
+          {{ u.uid }}| {{ u.uname }} | {{ u.udtcreated }}| counts tl:{{u.utlcount}} t:{{u.utcount}}|
         </a>
       {% endif %}
     {% endfor %}
@@ -119,78 +125,81 @@
 
 {% elif strpagestyle == 'Ncol' %}
 
-<div class="row"> 
+ <div class="row"> 
 
-  {% for i in range(1, 5) %}
+    {% for i in range(1, 5) %}
 
-    <div class="col m3">
-      <div class="collection">
+      <div class="col m3">
+        <div class="collection">
 
-        {% for u in ulist[(i-1)*pagelines:i*pagelines] %}
+       {% for u in ulist[(i-1)*pagelines:i*pagelines] %}
 
         {% if u.uid==uid_del %}
-        
-        <div>
-          <h6> Delete user </h6>
-          <div class="switch">
-            <label>
-              Delete Off
-              <input type="checkbox">
-              <span class="lever"></span>
-              Delete On
-            </label>
+          
+          <div>
+            <h6> Delete user </h6>
+            <div class="switch">
+              <label>
+                Delete Off
+                <input type="checkbox">
+                <span class="lever"></span>
+                Delete On
+              </label>
+            </div>
           </div>
-        </div>
 
-        <div class="input-field inline">
-            <input disabled value="{{ u.uid }}" id="uid" type="text">
-            <label for="uid">Id</label>
-        </div>
-        <div class="input-field inline">
-            <input disabled value="{{ u.uname }}" id="uname" type="text">
-            <label for="uame">Name</label>
-        </div>
-        <div class="input-field inline">
-            <input disabled value="{{ u.udtcreated }}" id="dtcreated" type="text">
-            <label for="dtcreated">Date Created</label>
-        </div>
-        <div class="input-field inline">
-          <input disabled value="{{ 4 }}" id="ntasks" type="text">
-          <label for="ntasks">Tasks</label>
-        </div>
+          <div class="input-field inline">
+              <input disabled value="{{ u.uid }}" id="uid" type="text">
+              <label for="uid">Id</label>
+          </div>
+          <div class="input-field inline">
+              <input disabled value="{{ u.uname }}" id="uname" type="text">
+              <label for="uame">Name</label>
+          </div>
+          <div class="input-field inline">
+              <input disabled value="{{ u.udtcreated }}" id="dtcreated" type="text">
+              <label for="dtcreated">Date Created</label>
+          </div>
+          <div class="input-field inline">
+            <input disabled value="{{ u.utlcount }}" id="ntls" type="text">
+            <label for="ntls">Tlist count</label>
+          </div>
+          <div class="input-field inline">
+            <input disabled value="{{ u.utcount }}" id="ntasks" type="text">
+            <label for="ntasks">Task count</label>
+          </div>
 
-        <div>
-        <a class="waves-effect waves-light btn ">Delete</a>
-        <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle)}} 
-          class="waves-effect waves-light btn ">Cancel
-        </a>
-        <hr>
-        </div>
-
-        {% else %}
-
-          <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle, uid_del=u.uid)}}
-            class="collection-item">
-            {{ u.uid }} : {{ u.uname }} : {{ u.udtcreated }} : {{ 'tlists:NNN' }}
+          <div>
+          <a class="waves-effect waves-light btn ">Delete</a>
+          <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle)}} 
+            class="waves-effect waves-light btn ">Cancel
           </a>
-        
-        {% endif %}
+          <hr>
+          </div>
 
-        {% endfor %}
+          {% else %}
 
+            <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=strpagestyle, uid_del=u.uid)}}
+              class="collection-item">
+              {{ u.uid }}| {{ u.uname }} | {{ u.udtcreated }}| counts tl:{{u.utlcount}} t:{{u.utcount}}|
+            </a>
+          
+          {% endif %}
+
+         {% endfor %}
+
+        </div>
       </div>
-    </div>
 
-    {% endfor%}  
-</div>
+      {% endfor%}  
+  </div>
 
 {% else %}
   <br>
   <p>Unknown page display stile</p>
-  <br>  
 
 {% endif %} 
  
-</div>
 <br>
+</div>
 {% endblock content2 %}
