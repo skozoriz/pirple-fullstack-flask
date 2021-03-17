@@ -112,27 +112,24 @@ def delete_user(uname=None, delete_alldata=False):
 
     with _CONN:
         with _CONN.cursor() as cur:
-
-            if delete_alldata:
-                # // try needed///
-                #delete all user tasks from table Task
-                cur.execute("""
-                    DELETE  FROM task
-                    WHERE ttlid IN (
-                        SELECT DISTINCT tlid 
-                        FROM tlist
-                        WHERE tluid=%s) """,
-                    (uid,) 
-                )    
-                #delete all user task lists from table Tlist
-                cur.execute("""
-                    DELETE  FROM tlist
-                    WHERE tluid=%s; """,
-                    (uid,) 
-                )   
-              
-            #delete user from table User   
             try:
+                if delete_alldata:
+                    #delete all user tasks from table Task
+                    cur.execute("""
+                        DELETE  FROM task
+                        WHERE ttlid IN (
+                            SELECT DISTINCT tlid 
+                            FROM tlist
+                            WHERE tluid=%s) """,
+                        (uid,) 
+                    )    
+                    #delete all user task lists from table Tlist
+                    cur.execute("""
+                        DELETE  FROM tlist
+                        WHERE tluid=%s; """,
+                        (uid,) 
+                    )   
+                #delete user from table User   
                 cur.execute("""
                     DELETE  FROM appuser
                     WHERE uid=%s 

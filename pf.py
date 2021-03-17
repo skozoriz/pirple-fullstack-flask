@@ -100,7 +100,7 @@ def signon():
 def signoff():
 
 	if not g.user:
-		flash('You are not logged-in, and cannot to be signed off, sorry')
+		flash('You are not logged-in, and cannot be signed off, sorry')
 		return redirect(url_for('home'))
 
 	uname = g.user.uname
@@ -111,8 +111,10 @@ def signoff():
 	# delete user record from DB and all assosiated data, for uid
 	#   task    : ttlid = {{tlist.tlid}}
 	#   tlist   : tluid = {{g.uid}}
-	#    appuser : uid = {{g.uid}} 	if row_cnt = 0:
-	row_cnt = md.delete_user(uname, delete_alldata=False) # error inside del_user now, row_cnt==0
+	#   appuser : uid, uname 	
+	# row_cnt == 0  <> deletion was not performed
+	# currently (delete_alldata=False) we try to delete user record ONLY
+	row_cnt = md.delete_user(uname, delete_alldata=False) 
 
 	if row_cnt == 0:
 		flash(f'Cannot sign-off for user {uname}: tlists or tasks existed')
@@ -120,7 +122,7 @@ def signoff():
 		# log out, if logged in
 		if g.user.uname == uname:
 			session.pop('user_name', None)
-	
+		flash(f'Successfully signed-off!! All task lists and tasks owned by you have been removed.')	
 	return redirect(url_for('home'))
 
 

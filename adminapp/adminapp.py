@@ -11,6 +11,7 @@ from flask import (
 
 # from pf import model as md 
 from . import adminapp_model as mda
+from pf import model as md
 
 adminapp = Blueprint('adminapp', __name__, 
     # static_url_path='admin',
@@ -79,13 +80,13 @@ def adm_home():
 
 @adminapp.route('/users')
 # URL parameters processed by template
-#   pg_style in (+"1col", "Ncol"), 
+#   pg_style in (1..6), 
 #   pg_lines in (10, =12, 20, 24)
-#   pg_num_ - page num to be shown (default is '1' or 'first')
-#   uid_del - user to be shown for deletion
+#   pg_num_ - page num to be shown (default is '1' or 'first'), '1' or 'first', '2', ... 'n' or 'last'
+#   uid_del - user to be promoted for deletion
 # variables for template
 #   nn - number of users in appuser table
-#   mdaproc - procedure from admin model which read users for one page (template decides)
+#   mdaproc - procedure from admin model which reads users for one page (template decides)
 def adm_usermgmt():
     
     if not g.admuname:
@@ -97,4 +98,18 @@ def adm_usermgmt():
         nn=mda.count_user("all"),
         mdaproc=mda.read_users_page
     )
+
+@adminapp.route('/users/<uname>/delete')
+def adm_delete_user(uname):
+
+    if not g.admuname:
+        flash('You are not administrator, please login as pf admin.')
+        return redirect(url_for('adminapp.adm_login'))
+    
+    if md.delete_user(uname, delete_alldata=True) == 0:
+        flash(f"User '{uname}' and it's data were not deleted.")
+    else:
+        flash(f"User '{uname}' and it's data were successsfully deleted.")
+
+    return redirect(url_for("adminapp.adm_usermgmt", **request.args))
 

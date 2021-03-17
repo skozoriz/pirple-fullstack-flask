@@ -119,8 +119,10 @@
           </div>
 
           <div>
-          <a class="waves-effect waves-light btn"  id="adm_delete" disabled>Delete</a>
-          <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=styleN)}} 
+          <a href={{url_for("adminapp.adm_delete_user", pg_num=strpagenum, pg_lines=strpagelines, pg_style=styleN, uname=u.uname)}} 
+            class="waves-effect waves-light btn"  id="adm_delete" disabled>Delete
+          </a>
+          <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=styleN)}}
             class="waves-effect waves-light btn ">Cancel
           </a>
           <hr>
@@ -130,7 +132,8 @@
 
             <a href={{url_for("adminapp.adm_usermgmt", pg_num=strpagenum, pg_lines=strpagelines, pg_style=styleN, uid_del=u.uid)}}
               class="collection-item">
-              {{ u.uid }}|<b>{{ u.uname }}</b> | {{ u.udtcreated }}| tls:<b>{{u.utlcount}}</b> tasks:<b>{{u.utcount}}</b>
+              <b>{{ u.uname }}</b> | tls:<b>{{u.utlcount}}</b> tasks:<b>{{u.utcount}}</b><br>
+              {{ u.uid }} | {{ u.udtcreated }}
             </a>
           
         {% endif %}
@@ -158,8 +161,6 @@
         {b.removeAttribute("disabled")} 
       else 
         {b.setAttribute("disabled", "disabled")}
-      batr_after = b.hasAttribute("disabled")
-      //alert("disabled before: " + batr_before + "\n disabled after: " + batr_after)
   }
 </script>
 </div>
