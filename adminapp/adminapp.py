@@ -11,7 +11,7 @@ from flask import (
 
 # from pf import model as md 
 from . import adminapp_model as mda
-from pf import model as md
+import model as md
 
 adminapp = Blueprint('adminapp', __name__, 
     # static_url_path='admin',

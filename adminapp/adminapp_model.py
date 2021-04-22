@@ -1,8 +1,8 @@
 from collections import namedtuple
 
-from pf.db import CONN as _CONN 
+from db import CONN as _CONN 
  
-from pf.model import User, USER_EMPTY    
+from model import User, USER_EMPTY    
 
 # special case - read adminuser
 def read_adminuser(auname=None): 

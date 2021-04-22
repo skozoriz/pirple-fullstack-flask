@@ -2,7 +2,7 @@
 from collections import namedtuple
 import sys 
 
-from pf.db import CONN as _CONN
+from db import CONN as _CONN
 
 def check_db():
     cur = _CONN.cursor()
