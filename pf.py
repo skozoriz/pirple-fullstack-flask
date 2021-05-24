@@ -499,7 +499,7 @@ if __name__ == '__main__':
 
 	print(f'[before_app.run] ...') 
 
-	app.run(host='localhost', port=5001, debug=True)  # host='0.0.0.0' or host='localhost'  
+	app.run(host='localhost', port=7000, debug=True)  # host='0.0.0.0' or host='localhost'  
 
 	print(f'[after_app.run] ...') 
 
