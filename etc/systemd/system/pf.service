@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve my pirple flask to do app project
+After=network.target
+
+[Service]
+User=pfadm
+Group=www-data
+WorkingDirectory=/home/pfadm/pf
+Environment="PATH=/home/pfadm/pf/env/bin"
+ExecStart=/home/pfadm/pf/env/bin/uwsgi --ini pf.ini
+
+[Install]
+WantedBy=multi-user.target

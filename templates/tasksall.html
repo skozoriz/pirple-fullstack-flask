@@ -8,20 +8,21 @@
 {% set tlactive_values = [true] if request.args.get("tlactiveonly") == 'Yes' else [true, false] %}
 
 {% block data %}
-<table class="table table-responsive">
-  <caption style="caption-side: top;">
+<table class="table table-responsive table-hover caption-top table-sm">
+  <caption>
     <h2 class="text-left-right">
       <span class="left-text"> All Tasks for {{ g.user.uname }} </span>
-      <span class="byline">
-        <a href={{ url_for('task', tlist_id=0, task_id=None, mode='alt') }} class="toperation"><strong>NEW</strong></a> || 
-        <a href={{ url_for('tlists') }}><strong>MainView</strong></a></span>
+      <span class="byline toperation">
+        <a href={{ url_for('task', tlist_id=0, task_id=None, mode='alt') }}><strong>NEW</strong></a> || 
+        <a href={{ url_for('tlists') }}> <strong>TListView</strong></a>
+      </span>
     </h2>
   </caption>
   <thead>
     <tr>
-        <th class="tpri">Pri</th>
-        <th><span class="tname">Task name</span></th>
-        <th class="tdate">Date_due</th>
+        <th>Pri</th>
+        <th>Task name</th>
+        <th>Date_due</th>
 
         <th>
           {% if request.args.get("tnotcomletedonly") == 'Yes' %}
@@ -52,10 +53,10 @@
   <tbody>
 {% for t in list_of_tasks if t.tcompleted in tcompleted_values and t.ttlactive in tlactive_values %}
   <tr>
-    <td class="tpri"><br>{{ t.tpri }}</td>
+    <td class="tpri">{{ t.tpri }}</td>
     <td>
       <span class="tname">{{ t.tname }}</span> 
-      <br> <span class="tdesc">{{ t.tdesc | truncate(30, True) }}</span> 
+      <br> <span class="tdesc">{{ t.tdesc if t.desc else '...' | truncate(30, True) }}</span> 
     </td>
     <td class="tdate">{{ t.tdtdue  if t.tdtdue else ""}}</td>
 
@@ -68,8 +69,8 @@
      {{ t.tdtcompleted if t.tdtcompleted else ""}}     
     </td>
 
-    <td class="{{ t.ttlcolor }}">
-      <span class="badge badge-light">
+    <td>
+      <span class="badge badge-light {{t.ttlcolor}} {{'text-dark' if t.ttlcolor=='white' else ''}}">
         {{ t.ttlpri }} |
         {{ t.ttlname  | truncate(15, True)  }} |
         {% if t.ttlactive %}
@@ -80,23 +81,15 @@
       </span>
     </td>
 
-    <td  class="toperation"><a href={{ url_for('task', tlist_id=t.ttlid, task_id=t.tid, mode='alt') }}><Strong>UPD</Strong></a> ||
-        <a href={{ url_for('task_delete', tlist_id=t.ttlid, task_id=t.tid) }}><Strong>DEL</Strong></a>
-    </td>
+    <td  class="toperation">
+      <a href={{ url_for('task', tlist_id=t.ttlid, task_id=t.tid, mode='alt') }}><Strong>UPD</Strong></a> ||
+      <a href="javascript:request_delete('{{ url_for('task', tlist_id=t.ttlid, task_id=t.tid) }}')"><Strong>DEL<Strong></a>
+     </td>
   </tr>
 {% endfor %}
 </tbody>
-<tfoot>
-<tr>
-    <td>  </td>
-    <td>  </td>  
-    <td>  </td>
-    <td>  </td>
-    <td>  </td>      
-    <td>  </td>     
-    <td>  </td>
-  </tr>
-</tfoot>
 </table>
+
+<br>
 
 {% endblock data %}

@@ -157,7 +157,7 @@ Tlist_ext = namedtuple(
 TLIST_EMPTY = Tlist()
 
 # leave as is or convert to use Tlist/Tlist_ext ?
-# uname is additional attribute to Tlist: < uname, *(TList) >
+# uname is additional attribute to Tlist: < tluname, *(TList) >
 def read_tlists(uname=None):
     if uname is None: 
         return ()

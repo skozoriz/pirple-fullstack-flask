@@ -7,20 +7,20 @@
 {% set active_values = [true] if request.args.get("activeonly") == 'Yes' else [true, false] %}
 
 {% block data %}
-<table class="table table-responsive">
-<caption style="caption-side: top;">
+<table class="table table-responsive table-hover caption-top table-sm">
+<caption>
   <h2 class="text-left-right">
     <span class="left-text"> Task lists</span>
     <span class="byline toperation">
       <a href={{ url_for('tlist') }}><strong>NEW</strong>   ||
-      <a href={{ url_for('tasksall') }}> <strong>AltView</strong></a></span>
+      <a href={{ url_for('tasksall') }}> <strong>FullView</strong></a></span>
   </h2>
 </caption>
 <thead>
 <tr>
-    <th>Pri</th>
+    <th style="text-align:right">Pri</th>
     <th>List_name</th>
-    <th>{% if request.args.get("activeonly") == 'Yes' %}
+    <th style="text-align:right">{% if request.args.get("activeonly") == 'Yes' %}
       <a href={{ url_for('tlists') }} class="toperation"><strong>F:all</strong></a> 
       {% else %}
       <a href={{ url_for('tlists', activeonly='Yes') }} class="toperation"><strong>F:act</strong></a> 
@@ -35,7 +35,10 @@
 {% for tl in list_of_tlists if tl.tlactive in active_values : %}
   <tr>
     <td class="tpri">{{ tl.tlpri }}</td>
-    <td class="tnamelink"><a href={{ url_for('tasks', tlist_id=tl.tlid) }}><Strong>{{ tl.tlname }}</Strong><span class="badge badge-secondary">{{ tl.tltcount }}</span></a></td> 
+    <td class="tnamelink">
+      <a href={{ url_for('tasks', tlist_id=tl.tlid) }}>
+               <Strong>{{ tl.tlname }}</Strong><span class="badge bg-primary"> {{ tl.tltcount }} </span>
+      </a></td> 
     <td class="tchbox">
       {% if tl.tlactive %}
         <i class="bi bi-check-square"></i>
@@ -44,23 +47,14 @@
       {% endif %}      
     </td> 
     <td class="tdate">{{ tl.tldtcreated }}</td> 
-    <td  class="{{ tl.tlcolor }}">{{ tl.tlcolor }}</td> 
-    <td class="toperation"> <a href={{ url_for('tlist', tlist_id=tl.tlid) }}><Strong>UPD</Strong></a> ||
-      <a href={{ url_for('tlist_delete', tlist_id=tl.tlid) }}><Strong>DEL</Strong></a> 
+    <td style="background:{{ tl.tlcolor }}">{{ tl.tlcolor }}</td> 
+    <td class="toperation"> 
+      <a href={{ url_for('tlist', tlist_id=tl.tlid) }}><Strong>UPD</Strong></a> ||
+      <a href="javascript:request_delete('{{ url_for('tlist', tlist_id=tl.tlid) }}')"><Strong>DEL</Strong></a>
     </td>
   </tr>
 {% endfor %}
 </tbody>
-<tfoot>
-<tr>
-    <td>  </td>
-    <td>  </td> 
-    <td>  </td>
-    <td>  </td> 
-    <td>  </td> 
-    <td>  </td> 
-  </tr>
-</tfoot>
 </table>
 
 <br>

@@ -184,8 +184,35 @@ def tlists():
 
 
 @app.route('/tlist', methods=['GET', 'POST'])   # CREATE tlist
-@app.route('/tlist/<int:tlist_id>', methods=['GET', 'POST']) # UPDATE tlist
+@app.route('/tlist/<int:tlist_id>', methods=['GET', 'POST', 'DELETE']) # UPDATE,  DELETE tlist
 def tlist(tlist_id=None):
+
+	# for DELETE method, which is called from javascript, we are returning something but not HTML
+	# client will refresh the page throught GET request to back-end 
+
+	if request.method == 'DELETE':  # DELETE tlist with tlist_id
+
+		if not g.user or (tlist_id is None):
+			return str(0)
+		
+		# check if tlist belongs to current user
+		if md.read_tlist(tlist_id).tluid != g.user.uid:
+			flash(f'Task list:{tlist_id} was not deleted, you ({g.user.uname}) are not owner of it.')
+			return str(0)
+
+		# flash(f'You ({g.user.uid}:{g.user.uname}) are about to delete tlist with id:{tlist_id}')
+		# return str(tlist_id)
+
+		rows_deleted = md.delete_tlist(tlid=tlist_id, delete_alldata=False)  # ==0 or ==1
+		if rows_deleted == 0:
+			flash(f'Task list:{tlist_id} was not deleted, may be due to existence of tasks in it.')
+			return str(1)	
+
+		flash(f'Task list:{tlist_id} was deleted successfully.')
+		return str(1)	
+
+	# for GET and POST methods we are returning HTML page to be rendered in brouser
+
 	if not g.user:
 		return redirect(url_for('login'))
 	uname = g.user.uname
@@ -269,18 +296,22 @@ def tlist(tlist_id=None):
 		abort(400)
 
 
-@app.route('/tlist/<int:tlist_id>/delete', methods=['GET']) # DELETE tlist
-def tlist_delete(tlist_id=None):
+# @app.route('/tlist/<int:tlist_id>/delete', methods=['GET', 'POST']) # DELETE tlist
+# def tlist_delete(tlist_id=None):
 
-	if not g.user:
-		return redirect(url_for('login'))
-	if tlist_id is None: 
-		return redirect(url_for('tlists'))	
+# 	if not g.user:
+# 		return redirect(url_for('login'))
+# 	if tlist_id is None: 
+# 		return redirect(url_for('tlists'))	
 	
-	rows_deleted = md.delete_tlist(tlid=tlist_id, delete_alldata=False)
-	if rows_deleted == 0:
-		flash('Task list was not deleted')
-	return redirect(url_for('tlists'))	
+# 	if request.method == 'POST':
+# 		rows_deleted = md.delete_tlist(tlid=tlist_id, delete_alldata=False)
+# 		if rows_deleted == 0:
+# 			flash('Task list was not deleted, may be due to existence of tasks in it.')
+# 		return redirect(url_for('tlists'))	
+
+# 	flash(f'Server: Deletion of task list through GET is not allowed')
+# 	return redirect(url_for('tlists'))
 
 
 
@@ -331,8 +362,34 @@ def tasks(tlist_id=None):
 
 
 @app.route('/tlist/<int:tlist_id>/task', methods=['GET', 'POST'])   # CREATE task
-@app.route('/tlist/<int:tlist_id>/task/<int:task_id>', methods=['GET', 'POST'])  # UPD task
+@app.route('/tlist/<int:tlist_id>/task/<int:task_id>', methods=['GET', 'POST', 'DELETE'])  # UPD, DEL task
 def task(tlist_id=None, task_id=None):
+
+	# for DELETE method, which is called from javascript, we are returning something but not HTML
+	# client will refresh the page throught GET request to back-end itself
+
+	if request.method == 'DELETE':  # DELETE task with tlist_id
+
+		if not g.user or (task_id is None):
+			return str(0)
+		
+		# check if task belongs to current user (through parent tlist)
+		if md.read_tlist(tlist_id).tluid != g.user.uid:
+			flash(f'Task: {task_id} was not deleted, you ({g.user.uname}) are not owner of it.')
+			return str(0)
+
+		# flash(f'You ({g.user.uid}:{g.user.uname}) are about to delete task with id:{task_id} from tlist:{tlist_id}')
+		# return str(tlist_id)
+
+		rows_deleted = md.delete_task(tid=task_id)  # ==0 or ==1
+		if rows_deleted == 0 : 
+			flash(f'Task:{tlist_id}/{task_id} was not deleted.')
+			return str(0)
+				
+		flash(f'Task:{tlist_id}/{task_id} was deleted successfully.')
+		return str(1)	
+
+	# for GET and POST methods we are returning HTML page to be rendered in brouser
 
 	if not g.user:
 		return redirect(url_for('login'))
@@ -481,17 +538,24 @@ def task(tlist_id=None, task_id=None):
 		abort(400)
 
 
-@app.route('/tlist/<int:tlist_id>/task/<int:task_id>/delete', methods=['GET']) # DEL task
-def task_delete(tlist_id=None, task_id=None):
-	if not g.user:
-		return redirect(url_for('login'))
+# @app.route('/tlist/<int:tlist_id>/task/<int:task_id>/delete', methods=['GET', 'POST']) # DEL task
+# def task_delete(tlist_id=None, task_id=None):
+# 	if not g.user:
+# 		return redirect(url_for('login'))
 
-	rows_deleted = md.delete_task(tid=task_id)
-	if rows_deleted == 0 : 
-		flash('Task was not deleted')
-	# return redirect(url_for('tasks', tlist_id=tlist_id))
-	return redirect(request.referrer)
+# 	if request.method == 'POST':
+# 		rows_deleted = md.delete_task(tid=task_id)
+# 		if rows_deleted == 0 : 
+# 			flash('Task was not deleted')
+# 		# return redirect(url_for('tasks', tlist_id=tlist_id))
+# 		return redirect(request.referrer)
 
+# 	flash(f'Server: Deletion of task through GET is not allowed')
+# 	return redirect(request.referrer)
+
+
+# ---------------------------------------------
+# 
 
 if __name__ == '__main__':
 

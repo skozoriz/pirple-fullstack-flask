@@ -37,16 +37,14 @@
      {% block footer %} {% endblock footer %}
 
      <div class="row">
-       <div class="col-sm4">
+       <div class="col">
           <span>
             <a href={{ url_for('about') }}> About </a> 
             | <a href={{ url_for('privacy') }}> Privacy </a> 
             | <a href={{ url_for('termsofuse') }}> Terms of use </a>
           </span>
         </div>
-        <div class="col"> 
-        </div>
-        <div class="col-sm4">
+        <div class="col" style="text-align:right">
           {% if session.get('user_name', None)  %}
             <span>
               <a href={{ url_for('logout') }}>Log-out {{session.user_name}}</a> 
@@ -58,6 +56,26 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+ 
+  <script>
+    function request_delete(path) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('DELETE', path, true);
+        xhr.send();
+        //alert('Request DELETE sent to path: ' + path); 
+        xhr.onreadystatechange = processRequest;
+    
+      function processRequest(e) {
+        //alert('Request DELETE finished: readyState=' + String(xhr.readyState) + ' status=' +String(xhr.status));
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          //alert(xhr.responseText)
+          location.reload();
+        };
+      };
+
+    } ;   
+    
+  </script>
   </body>
 
 </html>

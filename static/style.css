@@ -93,12 +93,12 @@ tfoot  td {
 }
 .toperation {
    width: auto;
-   text-align: center;
+   text-align: left;
    text-shadow: 2px 2px 5px gray;
 }
 .tpri {
    text-align: right;
-   /* vertical-align: middle; */
+   vertical-align: middle; 
    font-size: small;
 }
 .tchbox {
